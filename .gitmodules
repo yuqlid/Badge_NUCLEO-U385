@@ -1,0 +1,3 @@
+[submodule "embedded-cli"]
+	path = embedded-cli
+	url = git@github.com:yuqlid/embedded-cli.git
