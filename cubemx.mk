@@ -7,7 +7,7 @@ C_INCLUDES +=  \
 -I$(CUBEMX)/Core/Inc \
 -I$(CUBEMX)/Drivers/STM32U3xx_HAL_Driver/Inc \
 -I$(CUBEMX)/Drivers/STM32U3xx_HAL_Driver/Inc/Legacy \
--I$(CUBEMX)/BSP/STM32U3xx_Nucleo \
+-I$(CUBEMX)/Drivers/BSP/STM32U3xx_Nucleo \
 -I$(CUBEMX)/Drivers/CMSIS/Device/ST/STM32U3xx/Include \
 -I$(CUBEMX)/Drivers/CMSIS/Include \
 
@@ -15,12 +15,13 @@ C_INCLUDES +=  \
 C_SOURCES +=  \
 $(CUBEMX)/Core/Src/gpio.c \
 $(CUBEMX)/Core/Src/icache.c \
-$(CUBEMX)/Core/Src/stm32u385xx_hal_msp.c \
-$(CUBEMX)/Core/Src/stm32u385xx_it.c \
-$(CUBEMX)/Core/Src/system_stm32u385xx.c \
+$(CUBEMX)/Core/Src/stm32u3xx_it.c \
+$(CUBEMX)/Core/Src/stm32u3xx_hal_msp.c \
+$(CUBEMX)/Drivers/BSP/STM32U3xx_Nucleo/stm32u3xx_nucleo.c \
+$(wildcard $(CUBEMX)/Drivers/STM32U3xx_HAL_Driver/Src/*.c) \
+$(CUBEMX)/Core/Src/system_stm32u3xx.c \
 $(CUBEMX)/Core/Src/sysmem.c \
 $(CUBEMX)/Core/Src/syscalls.c \
-$(wildcard $(CUBEMX)/Drivers/STM32U3xx_HAL_Driver/Src/*.c) \
 
 # AS includes
 AS_INCLUDES +=  \
@@ -28,7 +29,7 @@ AS_INCLUDES +=  \
 
 # ASM sources
 ASM_SOURCES =  \
-$(CUBEMX)/startup_stm32u385xx.s.s
+$(CUBEMX)/startup_stm32u385xx.s
 
 LINKERSCRIPT =  \
 $(CUBEMX)/STM32U385xx_FLASH.ld

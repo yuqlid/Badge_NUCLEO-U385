@@ -102,22 +102,8 @@ C_INCLUDES +=  \
 #-Iesi \
 
 # C sources
-C_SOURCES =  \
+#C_SOURCES =  \
 #embedded-cli/lib/src/embedded_cli.c \
-#App/DRV8316CR/drv8316cr.c \
-#App/crc/crc_sw.c \
-#Middlewares/EEPROM_Emul/Core/eeprom_emul.c \
-#Middlewares/EEPROM_Emul/Porting/flash_interface.c \
-#App/eeprom_emul/eeprom_emul_app.c \
-
-C_SOURCES += \
-#esi/objectlist.c \
-SOES/soes/ecat_slv.c \
-SOES/soes/esc.c \
-SOES/soes/esc_coe.c \
-SOES/soes/esc_eep.c \
-SOES/soes/esc_eoe.c \
-SOES/soes/esc_foe.c \
 
 
 # CubeMXで生成したファイルの読み込み
@@ -131,36 +117,11 @@ ASM_UPPER_SOURCES = \
 # C++ includes
 CPP_INCLUDES = $(C_INCLUDES)
 CPP_INCLUDES += \
--IApp \
-#-IApp/inc_encoder \
--IApp/cli \
--IApp/AX58100 \
--IApp/voltage_sense \
--IApp/current_sense \
--IApp/controller \
--IApp/utils \
--IApp/filter \
--IApp/motor \
--IApp/config \
--IApp/retain_config
+-IApp
 
 # C++ sources
 CPP_SOURCES = \
-App/main.cpp \
-#App/inc_encoder/inc_encoder_manager.cpp \
-App/adc_manager.cpp \
-App/AX58100/esc_hw.cpp \
-App/ecat_app.cpp \
-App/config/config.cpp \
-App/dma_driver.cpp \
-App/voltage_sense/voltage_manager.cpp \
-App/current_sense/current_measurement.cpp \
-App/controller/foc.cpp \
-App/operation.cpp \
-App/fault_recoder.cpp \
-App/motor/motor_manager.cpp \
-App/retain_config/retain_config.cpp \
-#App/cli/cmd_lan9252.cpp \
+App/main.cpp
 
 #CPP_SOURCES += \
 #App/cli/cmd_drv8316cr.cpp \
@@ -398,12 +359,12 @@ clean_lib_intermediate:
 #lib: $(LIB_DIR)/$(STATICLIB_PREFIX)CppUTest.a clean_lib_intermediate
 
 # list of c++ objects
-CPPUTESTLIBOBJECTS = $(addprefix $(LIB_DIR)/,$(notdir $(CPPUTEST_SOURCES:.cpp=.o)))
-vpath %.cpp $(sort $(dir $(CPPUTEST_SOURCES)))
- 
-$(LIB_DIR)/%.o: %.cpp Makefile | $(LIB_DIR) 
-	$(CXX) -c $(CPPUTESTFLAGS) -Wa,-a,-ad,-alms=$(LIB_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
- 
+#CPPUTESTLIBOBJECTS = $(addprefix $(LIB_DIR)/,$(notdir $(CPPUTEST_SOURCES:.cpp=.o)))
+#vpath %.cpp $(sort $(dir $(CPPUTEST_SOURCES)))
+
+#$(LIB_DIR)/%.o: %.cpp Makefile | $(LIB_DIR) 
+#	$(CXX) -c $(CPPUTESTFLAGS) -Wa,-a,-ad,-alms=$(LIB_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+
 #$(LIB_DIR)/$(STATICLIB_PREFIX)CppUTest.a: $(LIB_DIR) $(CPPUTESTLIBOBJECTS)
 #	$(AR) -cr $@ $(CPPUTESTLIBOBJECTS)
 
