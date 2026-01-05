@@ -107,7 +107,7 @@ C_INCLUDES +=  \
 
 
 # CubeMXで生成したファイルの読み込み
-# ASM_SOURCESはcubemx.mkで定義済み
+# ASM_SOURCES,LINKERSCRIPT,はcubemx.mkで定義済み
 include cubemx.mk
 
 # ASM sources
@@ -132,10 +132,8 @@ App/main.cpp
 #App/cli/cmd_calibration.cpp\
 #App/cli/cmd_general.cpp
 
-
 # CppUTestのソースを読み込む
 #include cpputestlib.mk
-
 
 #######################################
 # CFLAGS
@@ -160,7 +158,6 @@ C_DEFS =  \
 -DSTM32U385xx \
 
 C_DEFS +=  \
--D__ECLIPSE__ \
 -DARM_GCC_VERSION=\"$(ARM_GCC_VERSION)\" \
 -DGIT_BRANCH_NAME=\"$(GIT_BRANCH_NAME)\" \
 -DGIT_TAG_NAME=\"$(BUILD_TAG)\" \

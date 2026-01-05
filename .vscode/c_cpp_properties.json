@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "name": "stm32_Win32",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/App",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Core/Inc",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/STM32U3xx_HAL_Driver/Inc",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/STM32U3xx_HAL_Driver/Inc/Legacy",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/BSP/STM32U3xx_Nucleo",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/CMSIS/Device/ST/STM32U3xx/Include",
+                "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/CMSIS/Include",
+                "F:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/arm-none-eabi/include",
+                "F:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/lib/gcc/arm-none-eabi/12.3.1/include",
+                "${workspaceFolder}/embedded-cli/lib/include"
+
+            ],
+            "defines": [
+                "USE_HAL_DRIVER",
+                "USE_NUCLEO_64",
+                "STM32U385xx",
+                "__VFP_FP__=1",
+                "__ARM_ARCH=8",
+                "__thumb2__=1",
+                "__thumb__=1",
+                "__ARM_ARCH_8M_MAIN__=1",
+                "__CHAR_BIT__=8"
+            ],
+            "cppStandard": "c++17",
+            "cStandard": "c11",
+            "compilerPath": "F:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/bin/arm-none-eabi-g++.exe"
+        }
+    ],
+    "version": 4
+}
