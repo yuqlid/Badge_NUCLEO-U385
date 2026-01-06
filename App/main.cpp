@@ -11,16 +11,41 @@
 
 #include "main.h"
 #include "icache.h"
+#include "spi.h"
+#include "usart.h"
 #include "gpio.h"
+
+#include "retain_config.hpp"
+#include "embedded_cli.h"
 
 #include <cstdio>
 
-COM_InitTypeDef BspCOMInit;
 void SystemClock_Config(void);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+void __io_putchar(uint8_t ch) {
+  while (!LL_USART_IsActiveFlag_TXE(USART1));
+  LL_USART_TransmitData8(USART1, ch);
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+// embedded-cli関連
+void writeChar(EmbeddedCli *embeddedCli, char c) { __io_putchar(c); }
 
 int main(void)
 {
-
+  retainConfigInit();
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -29,6 +54,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ICACHE_Init();
+  MX_SPI1_Init();
+  MX_USART1_UART_Init();
 
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
@@ -36,18 +63,25 @@ int main(void)
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
-  /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
-  BspCOMInit.BaudRate = 115200;
-  BspCOMInit.WordLength = COM_WORDLENGTH_8B;
-  BspCOMInit.StopBits = COM_STOPBITS_1;
-  BspCOMInit.Parity = COM_PARITY_NONE;
-  BspCOMInit.HwFlowCtl = COM_HWCONTROL_NONE;
-  if (BSP_COM_Init(COM1, &BspCOMInit) != BSP_ERROR_NONE)
-  {
-    Error_Handler();
-  }
 
   printf("Hello.\r\n");
+
+  RetainConfig_t &retain_config = getRetainConfig();
+  if (retain_config.reboot_count > 0)
+  {
+    printf("Reboot Count: %d.\r\n", retain_config.reboot_count);
+  }
+  else
+  {
+    printf("First boot.\r\n");
+  }
+  retain_config.reboot_count++;
+/*
+  EmbeddedCliConfig *config = embeddedCliDefaultConfig();
+  config->maxBindingCount = 30;
+  EmbeddedCli *cli = embeddedCliNew(config);
+  cli->writeChar = writeChar;
+*/
   /* Infinite loop */
 
   while (1)

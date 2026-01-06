@@ -92,7 +92,7 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES +=  \
-#-Iembedded-cli/lib/include \
+-Iembedded-cli/lib/include \
 #-IApp/crc \
 #-IMiddlewares/EEPROM_Emul/Core \
 #-IMiddlewares/EEPROM_Emul/Porting  \
@@ -102,8 +102,8 @@ C_INCLUDES +=  \
 #-Iesi \
 
 # C sources
-#C_SOURCES =  \
-#embedded-cli/lib/src/embedded_cli.c \
+C_SOURCES =  \
+embedded-cli/lib/src/embedded_cli.c \
 
 
 # CubeMXで生成したファイルの読み込み
@@ -117,11 +117,13 @@ ASM_UPPER_SOURCES = \
 # C++ includes
 CPP_INCLUDES = $(C_INCLUDES)
 CPP_INCLUDES += \
--IApp
+-IApp \
+-IApp/retain_config
 
 # C++ sources
 CPP_SOURCES = \
-App/main.cpp
+App/main.cpp \
+App/retain_config/retain_config.cpp
 
 #CPP_SOURCES += \
 #App/cli/cmd_drv8316cr.cpp \
@@ -156,6 +158,7 @@ C_DEFS =  \
 -DUSE_NUCLEO_64 \
 -DUSE_HAL_DRIVER \
 -DSTM32U385xx \
+-DUSE_FULL_LL_DRIVER
 
 C_DEFS +=  \
 -DARM_GCC_VERSION=\"$(ARM_GCC_VERSION)\" \
