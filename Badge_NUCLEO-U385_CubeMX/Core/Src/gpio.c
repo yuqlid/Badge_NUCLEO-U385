@@ -32,21 +32,33 @@
 
 /* USER CODE END 1 */
 
-/** Configure pins
-     PC14-OSC32_IN (PC14)   ------> RCC_OSC32_IN
-     PC15-OSC32_OUT (PC15)   ------> RCC_OSC32_OUT
-     PA13 (JTMS/SWDIO)   ------> DEBUG_JTMS-SWDIO
-     PA14 (JTCK/SWCLK)   ------> DEBUG_JTCK-SWCLK
-     PA15 (JTDI)   ------> DEBUG_JTDI
-     PB3 (JTDO/TRACESWO)   ------> DEBUG_JTDO-SWO
+/** Configure pins as
+        * Analog
+        * Input
+        * Output
+        * EVENT_OUT
+        * EXTI
 */
 void MX_GPIO_Init(void)
 {
 
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+
+  /**/
+  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_6|LL_GPIO_PIN_7|LL_GPIO_PIN_9);
+
+  /**/
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_6|LL_GPIO_PIN_7|LL_GPIO_PIN_9;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
 
