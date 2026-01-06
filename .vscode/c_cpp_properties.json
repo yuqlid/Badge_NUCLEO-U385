@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/App",
+                "${workspaceFolder}/App/retain_config",
                 "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Core/Inc",
                 "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/STM32U3xx_HAL_Driver/Inc",
                 "${workspaceFolder}/Badge_NUCLEO-U385_CubeMX/Drivers/STM32U3xx_HAL_Driver/Inc/Legacy",
@@ -14,10 +15,10 @@
                 "F:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/arm-none-eabi/include",
                 "F:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/lib/gcc/arm-none-eabi/12.3.1/include",
                 "${workspaceFolder}/embedded-cli/lib/include"
-
             ],
             "defines": [
                 "USE_HAL_DRIVER",
+                "DUSE_FULL_LL_DRIVER",
                 "USE_NUCLEO_64",
                 "STM32U385xx",
                 "__VFP_FP__=1",

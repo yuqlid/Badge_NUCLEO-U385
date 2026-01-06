@@ -15,15 +15,19 @@
 #include "usart.h"
 #include "gpio.h"
 
+#include "build_info.hpp"
 #include "retain_config.hpp"
 #include "embedded_cli.h"
+#include "stm32u3_device.hpp"
+#include "stm32u3_rcc_driver.hpp"
 
 #include <cstdio>
 
 void SystemClock_Config(void);
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #ifdef __GNUC__
@@ -31,10 +35,12 @@ extern "C" {
 #else
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
-void __io_putchar(uint8_t ch) {
-  while (!LL_USART_IsActiveFlag_TXE(USART1));
-  LL_USART_TransmitData8(USART1, ch);
-}
+  void __io_putchar(uint8_t ch)
+  {
+    while (!LL_USART_IsActiveFlag_TXE(USART1))
+      ;
+    LL_USART_TransmitData8(USART1, ch);
+  }
 
 #ifdef __cplusplus
 }
@@ -43,9 +49,33 @@ void __io_putchar(uint8_t ch) {
 // embedded-cli関連
 void writeChar(EmbeddedCli *embeddedCli, char c) { __io_putchar(c); }
 
+Stm32u3Device sttm32u3device;
+Stm32u3RccDriver stm32u3rccdriver;
+
+static void print_boot_info(uint32_t rsr)
+{
+  printf("Hello World!\n\r");
+  puts(build_time_str);
+  puts(gcc_version_str);
+  puts(git_branch_str);
+  puts(git_tag_name_str);
+  puts(git_info_str);
+
+  sttm32u3device.printDeviceInfo();
+
+  printf("SYSCLK : %3ld MHz\r\n", HAL_RCC_GetSysClockFreq() / 1000000);
+  printf("HCLK   : %3ld MHz\r\n", HAL_RCC_GetHCLKFreq() / 1000000);
+  printf("PCLK1  : %3ld MHz\r\n", HAL_RCC_GetPCLK1Freq() / 1000000);
+  printf("PCLK2  : %3ld MHz\r\n", HAL_RCC_GetPCLK2Freq() / 1000000);
+  printf("SCB->VTOR  : 0x%lx\r\n", SCB->VTOR);
+
+  stm32u3rccdriver.printRCC_RSR(rsr);
+}
+
 int main(void)
 {
   retainConfigInit();
+  uint32_t rsr = stm32u3rccdriver.getRsr();
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -63,8 +93,7 @@ int main(void)
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
-
-  printf("Hello.\r\n");
+  print_boot_info(rsr);
 
   RetainConfig_t &retain_config = getRetainConfig();
   if (retain_config.reboot_count > 0)
@@ -76,12 +105,12 @@ int main(void)
     printf("First boot.\r\n");
   }
   retain_config.reboot_count++;
-/*
-  EmbeddedCliConfig *config = embeddedCliDefaultConfig();
-  config->maxBindingCount = 30;
-  EmbeddedCli *cli = embeddedCliNew(config);
-  cli->writeChar = writeChar;
-*/
+  /*
+    EmbeddedCliConfig *config = embeddedCliDefaultConfig();
+    config->maxBindingCount = 30;
+    EmbeddedCli *cli = embeddedCliNew(config);
+    cli->writeChar = writeChar;
+  */
   /* Infinite loop */
 
   while (1)
