@@ -52,7 +52,7 @@ void writeChar(EmbeddedCli *embeddedCli, char c) { __io_putchar(c); }
 Stm32u3Device sttm32u3device;
 Stm32u3RccDriver stm32u3rccdriver;
 
-static void print_boot_info(uint32_t rsr)
+static void print_boot_info(uint32_t csr)
 {
   printf("Hello World!\n\r");
   puts(build_time_str);
@@ -69,13 +69,13 @@ static void print_boot_info(uint32_t rsr)
   printf("PCLK2  : %3ld MHz\r\n", HAL_RCC_GetPCLK2Freq() / 1000000);
   printf("SCB->VTOR  : 0x%lx\r\n", SCB->VTOR);
 
-  stm32u3rccdriver.printRCC_RSR(rsr);
+  stm32u3rccdriver.printRCC_CSR(csr);
 }
 
 int main(void)
 {
   retainConfigInit();
-  uint32_t rsr = stm32u3rccdriver.getRsr();
+  uint32_t csr = stm32u3rccdriver.getRsr();
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -93,7 +93,7 @@ int main(void)
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
-  print_boot_info(rsr);
+  print_boot_info(csr);
 
   RetainConfig_t &retain_config = getRetainConfig();
   if (retain_config.reboot_count > 0)

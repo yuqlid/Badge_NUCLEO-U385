@@ -17,7 +17,7 @@
 
 class Stm32u3RccDriver {
  public:
-  const char* getStringRCC_RSR(uint32_t csr) {
+  const char* getStringRCC_CSR(uint32_t csr) {
     switch (csr) {
       case RCC_CSR_LPWRRSTF:
         return "Low-power reset";
@@ -43,19 +43,19 @@ class Stm32u3RccDriver {
     }
   }
 
-  void printRCC_RSR(uint32_t csr) {
+  void printRCC_CSR(uint32_t csr) {
     if (LL_RCC_IsActiveFlag_LPWRRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_LPWRRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_LPWRRSTF));
     if (LL_RCC_IsActiveFlag_WWDGRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_WWDGRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_WWDGRSTF));
     if (LL_RCC_IsActiveFlag_IWDGRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_IWDGRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_IWDGRSTF));
     if (LL_RCC_IsActiveFlag_SFTRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_SFTRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_SFTRSTF));
     if (LL_RCC_IsActiveFlag_BORRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_BORRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_BORRSTF));
     if (LL_RCC_IsActiveFlag_PINRST())
-      printf("%s\r\n", getStringRCC_RSR(RCC_CSR_PINRSTF));
+      printf("%s\r\n", getStringRCC_CSR(RCC_CSR_PINRSTF));
   }
   uint32_t getRsr() { return RCC->CSR & 0xFA000000; }
   void resetFlags() { LL_RCC_ClearResetFlags(); }
