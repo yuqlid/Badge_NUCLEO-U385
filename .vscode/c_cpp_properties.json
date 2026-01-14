@@ -18,7 +18,7 @@
             ],
             "defines": [
                 "USE_HAL_DRIVER",
-                "DUSE_FULL_LL_DRIVER",
+                "USE_FULL_LL_DRIVER",
                 "USE_NUCLEO_64",
                 "STM32U385xx",
                 "__VFP_FP__=1",
