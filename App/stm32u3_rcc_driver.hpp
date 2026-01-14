@@ -1,18 +1,19 @@
 /**
  * @file stm32h5_rcc_driver.hpp
  * @author KUSAKABE Yuki (yuqlid@gmail.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2025-04-24
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #ifndef STMC32H5_RCC_DRIVER_HPP_
 #define STMC32H5_RCC_DRIVER_HPP_
 
 #include <cstdio>
+
 #include "stm32u3xx_ll_rcc.h"
 
 class Stm32u3RccDriver {

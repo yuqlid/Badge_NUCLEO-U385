@@ -123,16 +123,17 @@ CPP_INCLUDES += \
 # C++ sources
 CPP_SOURCES = \
 App/main.cpp \
+App/dma_driver.cpp \
 App/retain_config/retain_config.cpp
 
-#CPP_SOURCES += \
+CPP_SOURCES += \
+App/cli/cmd_general.cpp
 #App/cli/cmd_drv8316cr.cpp \
 #App/cli/cmd_voltage.cpp \
 #App/cli/cmd_eeprom.cpp \
 #App/cli/cmd_tim1_test.cpp \
 #App/cli/cmd_current.cpp \
 #App/cli/cmd_calibration.cpp\
-#App/cli/cmd_general.cpp
 
 # CppUTestのソースを読み込む
 #include cpputestlib.mk

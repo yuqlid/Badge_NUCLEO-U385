@@ -60,16 +60,9 @@ static inline volatile uint32_t &GetDmaCBR1(DMA_TypeDef *DMAx,
       ->CBR1;
 }
 
-void LinkDmaUart4Rx(const DMA_TypeDef *DMAx, const uint32_t Channel,
-                    const uint32_t dest_address,
-                    const uint32_t blk_data_length);
-
-void LinkDmaUart5Rx(const DMA_TypeDef *DMAx, const uint32_t Channel,
-                    const uint32_t dest_address,
-                    const uint32_t blk_data_length);
-
-void LinkDmaADC12(const DMA_TypeDef *DMAx, const uint32_t Channel,
-                  const uint32_t dest_address, const uint32_t blk_data_length);
+void LinkDmaUsart1Rx(const DMA_TypeDef *DMAx, const uint32_t Channel,
+                     const uint32_t dest_address,
+                     const uint32_t blk_data_length);
 
 /*
 static inline void dma_nvic_setup(void) {
@@ -77,16 +70,7 @@ static inline void dma_nvic_setup(void) {
   NVIC_SetPriority(DMA1_Channel1_IRQn,
                    NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
   NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-  NVIC_SetPriority(DMA1_Channel2_IRQn,
-                   NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
-  NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-  NVIC_SetPriority(DMA1_Channel3_IRQn,
-                   NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
-  NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
-  NVIC_SetPriority(DMA1_Channel4_IRQn,
-                   NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
-  NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 }
 */
 #endif /* DMA_DRIVER_HPP_ */
