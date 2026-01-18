@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +94,7 @@ UINT MX_USBX_Device_Init(VOID)
   if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
+    printf("ux_system_initialize ERROR\r\n");
     return UX_ERROR;
     /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
@@ -124,6 +125,7 @@ UINT MX_USBX_Device_Init(VOID)
                                  USBD_ChangeFunction) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERROR */
+    printf("ux_device_stack_initialize ERROR\r\n");
     return UX_ERROR;
     /* USER CODE END USBX_DEVICE_INITIALIZE_ERROR */
   }
@@ -184,6 +186,7 @@ UINT MX_USBX_Device_Init(VOID)
                                      &storage_parameter) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_STORAGE_REGISTER_ERROR */
+    printf("ux_device_stack_class_register ERROR\r\n");
     return UX_ERROR;
     /* USER CODE END USBX_DEVICE_STORAGE_REGISTER_ERROR */
   }
