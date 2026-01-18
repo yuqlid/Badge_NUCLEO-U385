@@ -10,6 +10,13 @@ C_INCLUDES +=  \
 -I$(CUBEMX)/Drivers/BSP/STM32U3xx_Nucleo \
 -I$(CUBEMX)/Drivers/CMSIS/Device/ST/STM32U3xx/Include \
 -I$(CUBEMX)/Drivers/CMSIS/Include \
+-I$(CUBEMX)/USBX/App \
+-I$(CUBEMX)/USBX/Target \
+-I$(CUBEMX)/Middlewares/ST/usbx/common/core/inc \
+-I$(CUBEMX)/Middlewares/ST/usbx/ports/generic/inc \
+-I$(CUBEMX)/Middlewares/ST/usbx/common/usbx_stm32_device_controllers \
+-I$(CUBEMX)/Middlewares/ST/usbx/common/usbx_device_classes/inc \
+
 
 
 C_SOURCES +=  \
@@ -25,6 +32,11 @@ $(wildcard $(CUBEMX)/Drivers/STM32U3xx_HAL_Driver/Src/*.c) \
 $(CUBEMX)/Core/Src/system_stm32u3xx.c \
 $(CUBEMX)/Core/Src/sysmem.c \
 $(CUBEMX)/Core/Src/syscalls.c \
+$(CUBEMX)/Core/Src/usb.c \
+$(wildcard $(CUBEMX)/USBX/App/*.c) \
+$(wildcard $(CUBEMX)/Middlewares/ST/usbx/common/core/src/*.c) \
+$(wildcard $(CUBEMX)/Middlewares/ST/usbx/common/usbx_device_classes/src/*.c ) \
+$(wildcard $(CUBEMX)/Middlewares/ST/usbx/common/usbx_stm32_device_controllers/*.c ) \
 
 # AS includes
 AS_INCLUDES +=  \

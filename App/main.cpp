@@ -13,6 +13,7 @@
 
 #include <cstdio>
 
+#include "app_usbx_device.h"
 #include "build_info.hpp"
 #include "cli/cmd_general.hpp"
 #include "dma_driver.hpp"
@@ -25,6 +26,7 @@
 #include "stm32u3_device.hpp"
 #include "stm32u3_rcc_driver.hpp"
 #include "usart.h"
+#include "usb.h"
 
 void SystemClock_Config(void);
 
@@ -89,6 +91,8 @@ int main(void) {
   MX_ICACHE_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_USB_PCD_Init();
+  MX_USBX_Device_Init();
 
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
