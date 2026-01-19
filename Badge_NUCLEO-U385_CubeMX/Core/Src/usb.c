@@ -72,8 +72,8 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
   /** Initializes the peripherals clock
   */
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ICLK|RCC_PERIPHCLK_USB1;
-    PeriphClkInit.IclkClockSelection = RCC_ICLKCLKSOURCE_SYSCLK;
-    PeriphClkInit.Usb1ClockSelection = RCC_USB1CLKSOURCE_ICLK_DIV2;
+    PeriphClkInit.IclkClockSelection = RCC_ICLKCLKSOURCE_HSI48;
+    PeriphClkInit.Usb1ClockSelection = RCC_USB1CLKSOURCE_ICLK;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
     {
       Error_Handler();
@@ -81,6 +81,10 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
 
     /* USB_DRD_FS clock enable */
     __HAL_RCC_USB1_CLK_ENABLE();
+
+    /* USB_DRD_FS interrupt Init */
+    HAL_NVIC_SetPriority(USB_FS_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USB_FS_IRQn);
   /* USER CODE BEGIN USB_DRD_FS_MspInit 1 */
 
   /* USER CODE END USB_DRD_FS_MspInit 1 */
@@ -97,6 +101,9 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle)
   /* USER CODE END USB_DRD_FS_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USB1_CLK_DISABLE();
+
+    /* USB_DRD_FS interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USB_FS_IRQn);
   /* USER CODE BEGIN USB_DRD_FS_MspDeInit 1 */
 
   /* USER CODE END USB_DRD_FS_MspDeInit 1 */

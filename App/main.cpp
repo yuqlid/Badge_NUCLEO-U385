@@ -133,8 +133,10 @@ int main(void) {
   bindGeneralCmds(cli);
 
   while (1) {
+
     BSP_LED_Toggle(LED_GREEN);
     HAL_Delay(1);
+    
     while (!uasart1_rx_ringbuff.isEmpty()) {
       embeddedCliReceiveChar(cli,
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
@@ -179,7 +181,9 @@ void SystemClock_Config(void) {
 
   /** Initializes the CPU, AHB and APB buses clocks
    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSIS;
+  RCC_OscInitStruct.OscillatorType =
+      RCC_OSCILLATORTYPE_HSI48 | RCC_OSCILLATORTYPE_MSIS;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.MSISState = RCC_MSI_ON;
   RCC_OscInitStruct.MSISSource = RCC_MSI_RC0;
   RCC_OscInitStruct.MSISDiv = RCC_MSI_DIV1;
