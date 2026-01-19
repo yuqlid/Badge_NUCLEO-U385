@@ -42,7 +42,7 @@ MEMORY
 {
   RAM    (xrw)   : ORIGIN = 0x20000000,   LENGTH = 192K
   RAM2   (xrw)   : ORIGIN = 0x20030000,   LENGTH = 64K
-  FLASH  (rx)    : ORIGIN = 0x08000000,   LENGTH = 1024K
+  FLASH  (rx)    : ORIGIN = 0x08000000,   LENGTH = 512K
 }
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM); /* end of "RAM" Ram type memory */

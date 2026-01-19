@@ -21,6 +21,7 @@
 #include "gpdma.h"
 #include "gpio.h"
 #include "icache.h"
+#include "print_utils.h"
 #include "retain_config.hpp"
 #include "spi.h"
 #include "stm32u3_device.hpp"
@@ -92,7 +93,7 @@ int main(void) {
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
-  MX_USBX_Device_Init();
+  unsigned int ret = MX_USBX_Device_Init();
 
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
@@ -102,6 +103,13 @@ int main(void) {
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
   print_boot_info(csr);
+
+  if (ret == UX_SUCCESS) {
+    print_green("USBX Device Initialized successfully.\r\n");
+  } else {
+    print_red("USBX Device Initialization failed.\r\n");
+  }
+  printf("MX_USBX_Device_Init() result : %d\r\n", ret);
 
   LinkDmaUsart1Rx(
       GPDMA1, LL_DMA_CHANNEL_0,
