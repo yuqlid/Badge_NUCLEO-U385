@@ -125,7 +125,7 @@ UX_SLAVE_DEVICE                 *device;
 UX_SLAVE_ENDPOINT               *endpoints_pool;
 UX_SLAVE_INTERFACE              *interfaces_pool;
 UX_SLAVE_TRANSFER               *transfer_request;
-volatile  UINT                            status;
+UINT                            status;
 ULONG                           interfaces_found;
 ULONG                           endpoints_found;
 #if !defined(UX_DEVICE_INITIALIZE_FRAMEWORK_SCAN_DISABLE)
