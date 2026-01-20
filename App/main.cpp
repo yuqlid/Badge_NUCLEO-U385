@@ -92,7 +92,6 @@ int main(void) {
   MX_ICACHE_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
-  MX_USB_PCD_Init();
   unsigned int ret = MX_USBX_Device_Init();
 
   /* Initialize leds */
@@ -133,15 +132,15 @@ int main(void) {
   bindGeneralCmds(cli);
 
   while (1) {
-
     BSP_LED_Toggle(LED_GREEN);
     HAL_Delay(1);
-    
+
     while (!uasart1_rx_ringbuff.isEmpty()) {
       embeddedCliReceiveChar(cli,
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
     }
     embeddedCliProcess(cli);
+    ux_device_stack_tasks_run();
   }
 }
 

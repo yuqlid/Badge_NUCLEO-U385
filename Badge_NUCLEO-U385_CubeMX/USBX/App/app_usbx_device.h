@@ -57,7 +57,7 @@ extern "C" {
 UINT MX_USBX_Device_Init(VOID);
 
 /* USER CODE BEGIN EFP */
-
+void USBX_APP_Device_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
