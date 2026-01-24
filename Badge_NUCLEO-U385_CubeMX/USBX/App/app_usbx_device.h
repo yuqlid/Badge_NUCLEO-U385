@@ -58,6 +58,7 @@ UINT MX_USBX_Device_Init(VOID);
 
 /* USER CODE BEGIN EFP */
 void USBX_APP_Device_Init(void);
+VOID USBX_Device_Process(VOID *arg);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

@@ -337,22 +337,31 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
 }
 /* USER CODE BEGIN 1 */
 
+/**
+  * @brief  MX_USBX_Device_Process
+  *         Run USBX state machine.
+  * @param  arg: not used
+  * @retval none
+  */
+VOID USBX_Device_Process(VOID *arg)
+{
+  ux_device_stack_tasks_run();
+
+}
+
 void USBX_APP_Device_Init(void)
 {
   MX_USB_PCD_Init();
 
-  // HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x18);
-  // HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x58);
-  // HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x81, PCD_SNG_BUF, 0x98);
-  // HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x01, PCD_SNG_BUF, 0xD8);
-
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x14);
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x54);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x81, PCD_SNG_BUF, 0x94);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x01, PCD_SNG_BUF, 0xD4);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x82, PCD_SNG_BUF, 0x114);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, USBD_MSC_EPOUT_ADDR, PCD_SNG_BUF, 0x94);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, USBD_MSC_EPIN_ADDR, PCD_SNG_BUF, 0xD4);
 
-  ux_dcd_stm32_initialize((ULONG)USB_DRD_FS, (ULONG)&hpcd_USB_DRD_FS);
+  if(ux_dcd_stm32_initialize((ULONG)USB_DRD_FS, (ULONG)&hpcd_USB_DRD_FS) != UX_SUCCESS)
+  {
+    Error_Handler();
+  }
 
   HAL_PCD_Start(&hpcd_USB_DRD_FS);
 }

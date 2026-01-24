@@ -43,7 +43,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+#define RAM_DISK_SIZE (64 * 1024)  // 64KB RAM disk
+#define BLOCK_SIZE 512
+static uint8_t ram_disk[RAM_DISK_SIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

@@ -140,7 +140,9 @@ int main(void) {
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
     }
     embeddedCliProcess(cli);
-    ux_device_stack_tasks_run();
+    USBX_Device_Process(NULL);
+    //_ux_system_device_tasks_run();
+    // ux_device_stack_tasks_run();
   }
 }
 
