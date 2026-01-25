@@ -261,7 +261,8 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections,-print-memory-usage
 LDFLAGS += -u _printf_float
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin checksum $(BUILD_DIR)/$(TARGET).lst
+#all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin checksum $(BUILD_DIR)/$(TARGET).lst
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 #######################################
 # build the application
@@ -324,9 +325,12 @@ checksumgen: $(BUILD_DIR)/$(TARGET).hex
 #######################################
 # Program CubrProg
 #######################################
-upload: $(BUILD_DIR)/$(TARGET)_crc.bin
+upload: $(BUILD_DIR)/$(TARGET).bin
+	STM32_Programmer_CLI -c port=SWD -w $(BUILD_DIR)/$(TARGET).bin 0x08000000 --verify -rst
+
+#upload: $(BUILD_DIR)/$(TARGET)_crc.bin
 #	STM32_Programmer_CLI -c port=SWD -w $(BUILD_DIR)/$(TARGET)_crc.hex 0x08000000 --verify -rst
-	STM32_Programmer_CLI -c port=SWD -w $(BUILD_DIR)/$(TARGET)_crc.bin 0x08000000 --verify -rst
+#	STM32_Programmer_CLI -c port=SWD -w $(BUILD_DIR)/$(TARGET)_crc.bin 0x08000000 --verify -rst
 
 #######################################
 # Program OpenOCD
