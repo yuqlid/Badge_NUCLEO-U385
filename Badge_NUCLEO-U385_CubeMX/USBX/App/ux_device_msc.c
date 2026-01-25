@@ -119,8 +119,11 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
     memcpy(&data_pointer[3], "MSDOS5.0", 8);
 
     /* Bytes per sector = 512 */
-    data_pointer[11] = 0x00;
-    data_pointer[12] = 0x02;
+    uint16_t block = USBD_STORAGE_GetMediaBlocklength();
+    data_pointer[11] = (uint8_t)(block & 0xFF);
+    data_pointer[12] = (uint8_t)((block >> 8) & 0xFF);
+    //data_pointer[11] = 0x00;
+    //data_pointer[12] = 0x02;
 
     /* Sectors per cluster = 1 */
     data_pointer[13] = 0x01;
