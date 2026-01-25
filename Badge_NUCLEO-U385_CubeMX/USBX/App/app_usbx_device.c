@@ -170,7 +170,7 @@ UINT MX_USBX_Device_Init(VOID)
     ux_slave_class_storage_media_notification = USBD_STORAGE_Notification;
 
   /* USER CODE BEGIN STORAGE_PARAMETER */
-
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].ux_slave_class_storage_media_id = 1;
   /* USER CODE END STORAGE_PARAMETER */
 
   /* Get storage configuration number */
