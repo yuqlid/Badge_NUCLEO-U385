@@ -141,9 +141,10 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
                         ULONG number_blocks, ULONG lba, ULONG *media_status)
 {
   UINT status = UX_SUCCESS;
+
+  /* USER CODE BEGIN USBD_STORAGE_Write */
   *media_status = UX_ERROR;
   status = UX_ERROR;
-  /* USER CODE BEGIN USBD_STORAGE_Write */
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(data_pointer);
@@ -196,8 +197,9 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
                          ULONG *media_status)
 {
   UINT status = UX_SUCCESS;
-  *media_status = UX_SUCCESS;
+
   /* USER CODE BEGIN USBD_STORAGE_Status */
+  *media_status = UX_SUCCESS;
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(media_id);
@@ -270,3 +272,6 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   return MediaBlockLen;
 }
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
