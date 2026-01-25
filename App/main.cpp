@@ -119,7 +119,7 @@ int main(void) {
 
   RetainConfig_t &retain_config = getRetainConfig();
   if (retain_config.reboot_count > 0) {
-    printf("Reboot Count: %d.\r\n", retain_config.reboot_count);
+    printf("Reboot Count: %ld.\r\n", retain_config.reboot_count);
   } else {
     printf("First boot.\r\n");
   }
