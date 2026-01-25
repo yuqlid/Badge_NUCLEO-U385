@@ -106,12 +106,20 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Read */
+
+  ULONG offset = lba * BLOCK_SIZE;
+  ULONG length = number_blocks * BLOCK_SIZE;
+
+  memcpy(data_pointer, &ram_disk[offset], length);
+
+  *media_status = UX_SUCCESS;
+  
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
-  UX_PARAMETER_NOT_USED(data_pointer);
-  UX_PARAMETER_NOT_USED(number_blocks);
-  UX_PARAMETER_NOT_USED(lba);
-  UX_PARAMETER_NOT_USED(media_status);
+  //UX_PARAMETER_NOT_USED(data_pointer);
+  //UX_PARAMETER_NOT_USED(number_blocks);
+  //UX_PARAMETER_NOT_USED(lba);
+  //UX_PARAMETER_NOT_USED(media_status);
   /* USER CODE END USBD_STORAGE_Read */
 
   return status;
@@ -133,14 +141,15 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
                         ULONG number_blocks, ULONG lba, ULONG *media_status)
 {
   UINT status = UX_SUCCESS;
-
+  *media_status = UX_ERROR;
+  status = UX_ERROR;
   /* USER CODE BEGIN USBD_STORAGE_Write */
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(data_pointer);
   UX_PARAMETER_NOT_USED(number_blocks);
   UX_PARAMETER_NOT_USED(lba);
-  UX_PARAMETER_NOT_USED(media_status);
+  //UX_PARAMETER_NOT_USED(media_status);
   /* USER CODE END USBD_STORAGE_Write */
 
   return status;
@@ -187,12 +196,12 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
                          ULONG *media_status)
 {
   UINT status = UX_SUCCESS;
-
+  *media_status = UX_SUCCESS;
   /* USER CODE BEGIN USBD_STORAGE_Status */
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(media_id);
-  UX_PARAMETER_NOT_USED(media_status);
+  //UX_PARAMETER_NOT_USED(media_status);
   /* USER CODE END USBD_STORAGE_Status */
 
   return status;
@@ -238,7 +247,7 @@ ULONG USBD_STORAGE_GetMediaLastLba(VOID)
   ULONG LastLba = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaLastLba */
-
+  LastLba = (RAM_DISK_SIZE / BLOCK_SIZE) - 1;
   /* USER CODE END USBD_STORAGE_GetMediaLastLba */
 
   return LastLba;
@@ -255,12 +264,9 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   ULONG MediaBlockLen = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaBlocklength */
-
+  MediaBlockLen = BLOCK_SIZE;
   /* USER CODE END USBD_STORAGE_GetMediaBlocklength */
 
   return MediaBlockLen;
 }
 
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
