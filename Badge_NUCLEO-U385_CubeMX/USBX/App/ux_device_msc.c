@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "diskio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,9 +43,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-#define BLOCK_SIZE 512
-#define RAM_DISK_SIZE (64 * 1024)  // 64kB RAM disk
-static uint8_t ram_disk[RAM_DISK_SIZE];
+
+uint8_t ram_disk[RAM_DISK_SIZE]={0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,65 +105,14 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Read */
-  if (lba == 0)
+  if (disk_read(0, data_pointer, lba, number_blocks) != RES_OK)
   {
-    memset(data_pointer, 0x00, 512);
-
-    /* JMP */
-    data_pointer[0] = 0xEB;
-    data_pointer[1] = 0x3C;
-    data_pointer[2] = 0x90;
-
-    /* OEM Name */
-    memcpy(&data_pointer[3], "MSDOS5.0", 8);
-
-    /* Bytes per sector = 512 */
-    uint16_t block = USBD_STORAGE_GetMediaBlocklength();
-    data_pointer[11] = (uint8_t)(block & 0xFF);
-    data_pointer[12] = (uint8_t)((block >> 8) & 0xFF);
-    //data_pointer[11] = 0x00;
-    //data_pointer[12] = 0x02;
-
-    /* Sectors per cluster = 1 */
-    data_pointer[13] = 0x01;
-
-    /* Reserved sectors */
-    data_pointer[14] = 0x01;
-    data_pointer[15] = 0x00;
-
-    /* Number of FATs */
-    data_pointer[16] = 0x01;
-
-    /* Root entries */
-    data_pointer[17] = 0x10;
-    data_pointer[18] = 0x00;
-
-    /* Total sectors (small) */
-    uint16_t lba = USBD_STORAGE_GetMediaLastLba() + 1;
-    data_pointer[19] = (uint8_t)(lba & 0xFF);
-    data_pointer[20] = (uint8_t)((lba >> 8) & 0xFF);
-    //data_pointer[19] = 0x40;
-    //data_pointer[20] = 0x00;
-
-    /* Media descriptor */
-    data_pointer[21] = 0xF8;
-
-    /* FAT size */
-    data_pointer[22] = 0x01;
-    data_pointer[23] = 0x00;
-
-    /* Boot signature */
-    data_pointer[510] = 0x55;
-    data_pointer[511] = 0xAA;
-  }else{
-    ULONG offset = lba * BLOCK_SIZE;
-    ULONG length = number_blocks * BLOCK_SIZE;
-    memset(data_pointer, 0x00, number_blocks * 512);
-    //memcpy(data_pointer, &ram_disk[offset], length);
-
+      *media_status = UX_ERROR;
+      return UX_ERROR;
   }
 
   *media_status = UX_SUCCESS;
+  return UX_SUCCESS;
   
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
@@ -195,8 +143,15 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Write */
-  *media_status = UX_ERROR;
-  status = UX_ERROR;
+  if (disk_write(0, data_pointer, lba, number_blocks) != RES_OK)
+  {
+      *media_status = UX_ERROR;
+      return UX_ERROR;
+  }
+
+  *media_status = UX_SUCCESS;
+  return UX_SUCCESS;
+
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(data_pointer);

@@ -93,6 +93,7 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES +=  \
 -Iembedded-cli/lib/include \
+-IFatFs/source
 #-IApp/crc \
 #-IMiddlewares/EEPROM_Emul/Core \
 #-IMiddlewares/EEPROM_Emul/Porting  \
@@ -104,6 +105,10 @@ C_INCLUDES +=  \
 # C sources
 C_SOURCES =  \
 embedded-cli/lib/src/embedded_cli.c \
+FatFs/source/ff.c \
+FatFs/source/diskio.c \
+FatFs/source/ffsystem.c \
+FatFs/source/ffunicode.c
 
 
 # CubeMXで生成したファイルの読み込み
