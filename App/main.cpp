@@ -56,14 +56,14 @@ Stm32u3Device sttm32u3device;
 Stm32u3RccDriver stm32u3rccdriver;
 
 static void print_boot_info(uint32_t csr) {
-  //printf("Hello World!\n\r");
+  // printf("Hello World!\n\r");
   puts(build_time_str);
   puts(gcc_version_str);
   puts(git_branch_str);
   puts(git_tag_name_str);
   puts(git_info_str);
 
-  //sttm32u3device.printDeviceInfo();
+  // sttm32u3device.printDeviceInfo();
 
   printf("SYSCLK : %3ld MHz\r\n", HAL_RCC_GetSysClockFreq() / 1000000);
   printf("HCLK   : %3ld MHz\r\n", HAL_RCC_GetHCLKFreq() / 1000000);
@@ -140,9 +140,8 @@ int main(void) {
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
     }
     embeddedCliProcess(cli);
+
     USBX_Device_Process(NULL);
-    //_ux_system_device_tasks_run();
-    // ux_device_stack_tasks_run();
   }
 }
 
