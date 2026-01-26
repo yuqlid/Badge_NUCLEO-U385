@@ -29,18 +29,7 @@ extern "C" {
 #include "ux_api.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define VOID void
-#define CHAR char
-#define UCHAR unsigned char
-#define INT int
-#define UINT unsigned int
-#define LONG long
-#define ULONG unsigned long
-#define SHORT short
-#define USHORT unsigned short
-#define UX_SLAVE_CLASS_STORAGE_MEDIA_OK 0
-#include <stdint.h>
-#include <string.h>  // for memcpy
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
