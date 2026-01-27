@@ -17,7 +17,7 @@
 
 #define RAM_DISK_SIZE (128 * 1024)
 
-uint8_t ram_disk[RAM_DISK_SIZE];
+static uint8_t ram_disk[RAM_DISK_SIZE];
 
 void RAM_disk_initialize(void) {
   // Initialize the RAM disk to zero
