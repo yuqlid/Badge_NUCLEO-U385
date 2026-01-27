@@ -83,11 +83,17 @@ void flush_page(void) {
 
   HAL_FLASH_Unlock();
 
+  uint32_t global_page = (page_addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+  uint32_t bank_relative_page = global_page;
+  if (GetBank(page_addr) == FLASH_BANK_2) {
+    bank_relative_page -= FLASH_PAGE_NB;
+  }
+
   FLASH_EraseInitTypeDef erase = {
 
       .TypeErase = FLASH_TYPEERASE_PAGES,
-      .Banks = FLASH_BANK_2,
-      .Page = (page_addr - FLASH_BASE) / FLASH_PAGE_SIZE,
+      .Banks = GetBank(page_addr),
+      .Page = bank_relative_page,
       .NbPages = 1};
   uint32_t error;
   HAL_FLASHEx_Erase(&erase, &error);
