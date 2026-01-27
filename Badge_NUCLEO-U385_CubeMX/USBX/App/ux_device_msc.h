@@ -71,7 +71,8 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID);
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define BLOCK_SIZE 512
-#define RAM_DISK_SIZE (128 * 1024)  // 64kB RAM disk
+// #define RAM_DISK_SIZE (128 * 1024)  // 64kB RAM disk
+#define FLASH_DISK_SIZE (512 * 1024)  // 512kB Flash disk
 /* USER CODE END PD */
 
 #ifndef STORAGE_NUMBER_LUN

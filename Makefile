@@ -92,6 +92,7 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES +=  \
+-IApp \
 -Iembedded-cli/lib/include \
 -IFatFs/source
 #-IApp/crc \
@@ -105,6 +106,7 @@ C_INCLUDES +=  \
 # C sources
 C_SOURCES =  \
 embedded-cli/lib/src/embedded_cli.c \
+App/stm32u3_flash.c \
 FatFs/source/ff.c \
 FatFs/source/diskio.c \
 FatFs/source/ffsystem.c \

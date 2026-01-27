@@ -12,9 +12,10 @@
 #include <stdint.h>
 #include <string.h>  // for memcpy
 
-#include "ff.h"            /* Basic definitions of FatFs */
+#include "ff.h" /* Basic definitions of FatFs */
+#include "stm32u3_flash.h"
 #include "ux_device_msc.h" /* Declarations for USBX MSC device class */
-
+#include "stm32u3xx_hal.h"
 /* Example: Declarations of the platform and disk functions in the project */
 // #include "platform.h"
 // #include "storage.h"
@@ -26,6 +27,11 @@
 #define DEV_USB 2 /* Map USB MSD to physical drive 2 */
 
 extern uint8_t ram_disk[];
+
+#define FLASH_DISK_SIZE (512 * 1024) /* Size of Flash disk */
+
+#define SECTORS_PER_PAGE (FLASH_PAGE_SIZE / SECTOR_SIZE)  // = 8
+#define TOTAL_SECTORS (FLASH_DISK_SIZE / SECTOR_SIZE)
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -52,7 +58,7 @@ DSTATUS disk_initialize(
   int result;
 
   if (pdrv != DEV_RAM) return STA_NOINIT;
-
+  chache_init();
   return 0;
 }
 
@@ -69,7 +75,9 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
   int result;
 
   if (pdrv != DEV_RAM) return RES_PARERR;
-  memcpy(buff, &ram_disk[sector * BLOCK_SIZE], count * BLOCK_SIZE);
+  if (sector + count > TOTAL_SECTORS) return RES_PARERR;
+
+  flash_read(buff, sector, count);
 
   return RES_OK;
 }
@@ -89,8 +97,8 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
   int result;
 
   if (pdrv != DEV_RAM) return RES_PARERR;
-
-  memcpy(&ram_disk[sector * BLOCK_SIZE], buff, count * BLOCK_SIZE);
+  if (sector + count > TOTAL_SECTORS) return RES_PARERR;
+  flash_write(buff, sector, count);
 
   return RES_OK;
 }
@@ -109,21 +117,22 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
   int result;
 
   if (pdrv != DEV_RAM) return RES_PARERR;
-
   switch (cmd) {
-    case GET_SECTOR_COUNT:
-      *(LBA_t *)buff = RAM_DISK_SIZE / BLOCK_SIZE;
+    case CTRL_SYNC:
+      flush_page();
       return RES_OK;
 
     case GET_SECTOR_SIZE:
-      *(WORD *)buff = BLOCK_SIZE;
+      *(WORD *)buff = GetSectorSize();
+      return RES_OK;
+
+    case GET_SECTOR_COUNT:
+      *(LBA_t *)buff = TOTAL_SECTORS;
       return RES_OK;
 
     case GET_BLOCK_SIZE:
-      *(DWORD *)buff = 1;
+      *(DWORD *)buff = 1;  // erase unit (sector単位でOK)
       return RES_OK;
-
-    default:
-      return RES_PARERR;
   }
+  return RES_PARERR;
 }
