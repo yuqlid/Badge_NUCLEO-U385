@@ -43,8 +43,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
-uint8_t ram_disk[RAM_DISK_SIZE]={0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -256,7 +254,9 @@ ULONG USBD_STORAGE_GetMediaLastLba(VOID)
   ULONG LastLba = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaLastLba */
-  LastLba = (RAM_DISK_SIZE / BLOCK_SIZE) - 1;
+
+  disk_ioctl(0, GET_SECTOR_COUNT, &LastLba);
+  LastLba--;
   /* USER CODE END USBD_STORAGE_GetMediaLastLba */
 
   return LastLba;
@@ -273,7 +273,7 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   ULONG MediaBlockLen = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaBlocklength */
-  MediaBlockLen = BLOCK_SIZE;
+  disk_ioctl(0, GET_BLOCK_SIZE, &MediaBlockLen);
   /* USER CODE END USBD_STORAGE_GetMediaBlocklength */
 
   return MediaBlockLen;

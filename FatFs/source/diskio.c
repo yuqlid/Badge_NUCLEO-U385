@@ -12,21 +12,14 @@
 #include <stdint.h>
 #include <string.h>  // for memcpy
 
-#include "ff.h"            /* Basic definitions of FatFs */
-#include "ux_device_msc.h" /* Declarations for USBX MSC device class */
-
-/* Example: Declarations of the platform and disk functions in the project */
-// #include "platform.h"
-// #include "storage.h"
+#include "ff.h"               /* Basic definitions of FatFs */
+#include "stm32u3_ramdisk.h"  // for RAM disk functions
 
 /* Example: Mapping of physical drive number for each drive */
 #define DEV_RAM 0 /* Map Ramdisk to physical drive 0 */
 // #define DEV_FLASH	0	/* Map FTL to physical drive 0 */
 #define DEV_MMC 1 /* Map MMC/SD card to physical drive 1 */
 #define DEV_USB 2 /* Map USB MSD to physical drive 2 */
-
-extern uint8_t ram_disk[];
-
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
@@ -48,12 +41,17 @@ DSTATUS disk_status(BYTE pdrv /* Physical drive nmuber to identify the drive */
 DSTATUS disk_initialize(
     BYTE pdrv /* Physical drive nmuber to identify the drive */
 ) {
-  DSTATUS stat;
-  int result;
+  //DSTATUS stat;
+  //int result;
 
-  if (pdrv != DEV_RAM) return STA_NOINIT;
-
-  return 0;
+  switch (pdrv) {
+    case DEV_RAM:
+      RAM_disk_initialize();
+      return RES_OK;
+    default:
+      return STA_NOINIT;
+  }
+  return STA_NOINIT;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -68,10 +66,14 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
   DRESULT res;
   int result;
 
-  if (pdrv != DEV_RAM) return RES_PARERR;
-  memcpy(buff, &ram_disk[sector * BLOCK_SIZE], count * BLOCK_SIZE);
-
-  return RES_OK;
+  switch (pdrv) {
+    case DEV_RAM:
+      RAM_disk_read(buff, sector, count);
+      return RES_OK;
+    default:
+      return RES_PARERR;
+  }
+  return RES_PARERR;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -88,11 +90,14 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
   DRESULT res;
   int result;
 
-  if (pdrv != DEV_RAM) return RES_PARERR;
-
-  memcpy(&ram_disk[sector * BLOCK_SIZE], buff, count * BLOCK_SIZE);
-
-  return RES_OK;
+  switch (pdrv) {
+    case DEV_RAM:
+      RAM_disk_write(buff, sector, count);
+      return RES_OK;
+    default:
+      return RES_PARERR;
+  }
+  return RES_PARERR;
 }
 
 #endif
@@ -110,20 +115,24 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
 
   if (pdrv != DEV_RAM) return RES_PARERR;
 
-  switch (cmd) {
-    case GET_SECTOR_COUNT:
-      *(LBA_t *)buff = RAM_DISK_SIZE / BLOCK_SIZE;
-      return RES_OK;
-
-    case GET_SECTOR_SIZE:
-      *(WORD *)buff = BLOCK_SIZE;
-      return RES_OK;
-
-    case GET_BLOCK_SIZE:
-      *(DWORD *)buff = 1;
-      return RES_OK;
-
-    default:
+  switch (pdrv) {
+    case DEV_RAM:
+      switch (cmd) {
+        case GET_SECTOR_COUNT:
+          *(LBA_t *)buff = RAM_disk_maxsector();
+          return RES_OK;
+        case GET_SECTOR_SIZE:
+          *(WORD *)buff = RAM_disk_sectorsize();
+          return RES_OK;
+        case GET_BLOCK_SIZE:
+          *(DWORD *)buff = 1;
+          return RES_OK;
+        default:
+          return RES_PARERR;
+      }
       return RES_PARERR;
+    default:
+      break;
   }
+  return RES_PARERR;
 }
