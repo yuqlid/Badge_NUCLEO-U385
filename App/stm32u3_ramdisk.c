@@ -21,7 +21,7 @@ uint8_t ram_disk[RAM_DISK_SIZE];
 
 void RAM_disk_initialize(void) {
   // Initialize the RAM disk to zero
-  // memset(ram_disk, 0, sizeof(ram_disk));
+  memset(ram_disk, 0, sizeof(ram_disk));
 }
 
 void RAM_disk_read(unsigned char *buff, uint32_t sector, unsigned int count) {
