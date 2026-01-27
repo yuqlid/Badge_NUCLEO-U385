@@ -25,12 +25,26 @@ void RAM_disk_initialize(void) {
 }
 
 void RAM_disk_read(unsigned char *buff, uint32_t sector, unsigned int count) {
-  memcpy(buff, &ram_disk[sector * BLOCK_SIZE], count * BLOCK_SIZE);
+  uint32_t offset = sector * BLOCK_SIZE;
+  uint32_t size = count * BLOCK_SIZE;
+  
+  //__disable_irq();
+  for (uint32_t i = 0; i < size; i++) {
+    buff[i] = ram_disk[offset + i];
+  }
+  //__enable_irq();
 }
 
 void RAM_disk_write(const unsigned char *buff, uint32_t sector,
                     unsigned int count) {
-  memcpy(&ram_disk[sector * BLOCK_SIZE], buff, count * BLOCK_SIZE);
+  uint32_t offset = sector * BLOCK_SIZE;
+  uint32_t size = count * BLOCK_SIZE;
+  
+  //__disable_irq();
+  for (uint32_t i = 0; i < size; i++) {
+    ram_disk[offset + i] = buff[i];
+  }
+  //__enable_irq();
 }
 
 uint32_t RAM_disk_maxsector(void) { return RAM_DISK_SIZE / BLOCK_SIZE; }

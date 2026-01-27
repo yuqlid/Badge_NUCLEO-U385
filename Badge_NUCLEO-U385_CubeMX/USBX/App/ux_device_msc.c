@@ -255,7 +255,8 @@ ULONG USBD_STORAGE_GetMediaLastLba(VOID)
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaLastLba */
 
-  disk_ioctl(0, GET_SECTOR_COUNT, &LastLba);
+  //disk_ioctl(0, GET_SECTOR_COUNT, &LastLba);
+  LastLba = 128*1024/512;
   LastLba--;
   /* USER CODE END USBD_STORAGE_GetMediaLastLba */
 
@@ -273,7 +274,8 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   ULONG MediaBlockLen = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaBlocklength */
-  disk_ioctl(0, GET_BLOCK_SIZE, &MediaBlockLen);
+  //disk_ioctl(0, GET_BLOCK_SIZE, &MediaBlockLen);
+  MediaBlockLen = 512;
   /* USER CODE END USBD_STORAGE_GetMediaBlocklength */
 
   return MediaBlockLen;
