@@ -13,9 +13,11 @@
 
 #include "stm32u3xx_hal.h"
 
-static uint8_t page_cache[FLASH_PAGE_SIZE];
+static uint8_t page_cache[FLASH_PAGE_SIZE];  // 1Page(4kB) cache
 static uint32_t cached_page_index = 0xFFFFFFFF;
 static uint8_t cache_dirty = 0;
+
+#define FLASH_DISK_SIZE (128 * 1024)
 
 /**
  * @brief  Gets the page of a given address
@@ -135,8 +137,6 @@ void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
   }
 }
 
-uint32_t FLASH_disk_maxsector(void) {
-  return (FLASH_PAGE_SIZE / SECTOR_SIZE) * 32;
-}
+uint32_t FLASH_disk_maxsector(void) { return FLASH_DISK_SIZE / SECTOR_SIZE; }
 
 uint16_t FLASH_disk_sectorsize(void) { return SECTOR_SIZE; }
