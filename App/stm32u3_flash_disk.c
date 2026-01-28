@@ -1,5 +1,5 @@
 /**
- * @file stm32u3_flash.c
+ * @file stm32u3_flash_disk.c
  * @author KUSAKABE Yuki (yuqlid@gmail.com)
  * @brief
  * @version 0.1
@@ -9,7 +9,7 @@
  *
  */
 
-#include "stm32u3_flash.h"
+#include "stm32u3_flash_disk.h"
 
 #include "stm32u3xx_hal.h"
 

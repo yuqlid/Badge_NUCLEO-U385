@@ -12,8 +12,9 @@
 #include <stdint.h>
 #include <string.h>  // for memcpy
 
-#include "ff.h"               /* Basic definitions of FatFs */
-#include "stm32u3_ramdisk.h"  // for RAM disk functions
+#include "ff.h"                  /* Basic definitions of FatFs */
+#include "stm32u3_flash_disk.h"  // for FLASH disk functions
+#include "stm32u3_ram_disk.h"    // for RAM disk functions
 
 /* Example: Mapping of physical drive number for each drive */
 #define DEV_RAM 0 /* Map Ramdisk to physical drive 0 */

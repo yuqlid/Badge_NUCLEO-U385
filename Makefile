@@ -107,12 +107,12 @@ C_INCLUDES +=  \
 # C sources
 C_SOURCES =  \
 embedded-cli/lib/src/embedded_cli.c \
-App/stm32u3_flash.c \
 FatFs/source/ff.c \
 FatFs/source/diskio.c \
 FatFs/source/ffsystem.c \
 FatFs/source/ffunicode.c \
-App/stm32u3_ramdisk.c \
+App/stm32u3_ram_disk.c \
+App/stm32u3_flash_disk.c \
 
 
 # CubeMXで生成したファイルの読み込み

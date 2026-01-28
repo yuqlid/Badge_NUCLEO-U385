@@ -1,5 +1,5 @@
 /**
- * @file stm32u3_ramdisk.h
+ * @file stm32u3_ram_disk.h
  * @author KUSAKABE Yuki (yuqlid@gmail.com)
  * @brief
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2026
  *
  */
-#ifndef STM32U3_RAMDISK_H
-#define STM32U3_RAMDISK_H
+#ifndef STM32U3_RAM_DISK_H
+#define STM32U3_RAM_DISK_H
 
 #include <stdint.h>
 
@@ -23,4 +23,4 @@ void RAM_disk_write(const unsigned char *buff, uint32_t sector,
 uint32_t RAM_disk_maxsector(void);
 uint16_t RAM_disk_sectorsize(void);
 
-#endif /* STM32U3_RAMDISK_H */
+#endif /* STM32U3_RAM_DISK_H */

@@ -9,7 +9,7 @@
  *
  */
 
-#include "stm32u3_ramdisk.h"
+#include "stm32u3_ram_disk.h"
 
 #include <string.h>
 

@@ -1,5 +1,5 @@
 /**
- * @file stm32u3_flash.h
+ * @file stm32u3_flash_disk.h
  * @author KUSAKABE Yuki (yuqlid@gmail.com)
  * @brief
  * @version 0.1
@@ -9,12 +9,13 @@
  *
  */
 
-#ifndef STM32U3_FLASH_H
-#define STM32U3_FLASH_H
+#ifndef STM32U3_FLASH_DISK_H
+#define STM32U3_FLASH_DISK_H
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
+
 #include <stdint.h>
 
 #define ADDR_FLASH_PAGE_128 \
@@ -34,7 +35,9 @@ void flash_read(unsigned char *buff, uint32_t sector, unsigned int count);
 void flash_write(const unsigned char *buff, uint32_t sector,
                  unsigned int count);
 uint32_t GetSectorSize(void);
+
 #if defined(__cplusplus)
 }
 #endif
-#endif  // STM32U3_FLASH_H
+
+#endif  // STM32U3_FLASH_DISK_H
