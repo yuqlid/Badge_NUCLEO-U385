@@ -52,7 +52,9 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#define DEV_RAM 0
+#define DEV_FLASH 1
+uint8_t dev = DEV_RAM;
 /* USER CODE END 0 */
 
 /**
@@ -103,7 +105,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Read */
-  if (disk_read(0, data_pointer, lba, number_blocks) != RES_OK)
+  if (disk_read(dev, data_pointer, lba, number_blocks) != RES_OK)
   {
       *media_status = UX_ERROR;
       return UX_ERROR;
@@ -141,7 +143,7 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Write */
-  if (disk_write(0, data_pointer, lba, number_blocks) != RES_OK)
+  if (disk_write(dev, data_pointer, lba, number_blocks) != RES_OK)
   {
       *media_status = UX_ERROR;
       return UX_ERROR;
@@ -255,8 +257,7 @@ ULONG USBD_STORAGE_GetMediaLastLba(VOID)
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaLastLba */
 
-  //disk_ioctl(0, GET_SECTOR_COUNT, &LastLba);
-  LastLba = 128*1024/512;
+  disk_ioctl(dev, GET_SECTOR_COUNT, &LastLba);
   LastLba--;
   /* USER CODE END USBD_STORAGE_GetMediaLastLba */
 
@@ -274,8 +275,7 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   ULONG MediaBlockLen = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaBlocklength */
-  //disk_ioctl(0, GET_BLOCK_SIZE, &MediaBlockLen);
-  MediaBlockLen = 512;
+  disk_ioctl(dev, GET_SECTOR_SIZE, &MediaBlockLen);
   /* USER CODE END USBD_STORAGE_GetMediaBlocklength */
 
   return MediaBlockLen;
