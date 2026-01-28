@@ -17,7 +17,6 @@ static uint8_t page_cache[FLASH_PAGE_SIZE];
 static uint32_t cached_page_index = 0xFFFFFFFF;
 static uint8_t cache_dirty = 0;
 
-
 /**
  * @brief  Gets the page of a given address
  * @param  Addr: Address of the FLASH Memory
@@ -68,7 +67,7 @@ void chache_init(void) {
   cached_page_index = 0xFFFFFFFF;
   cache_dirty = 0;
 }
-
+void FLASH_disk_initialize(void) { chache_init(); }
 void load_page(uint32_t page_index) {
   uint32_t addr = ADDR_FLASH_PAGE_128 + page_index * FLASH_PAGE_SIZE;
   memcpy(page_cache, (void *)addr, FLASH_PAGE_SIZE);
@@ -108,7 +107,7 @@ void flush_page(void) {
   cache_dirty = 0;
 }
 
-void flash_read(unsigned char *buff, uint32_t sector, unsigned int count) {
+void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count) {
   while (count--) {
     uint32_t addr = ADDR_FLASH_PAGE_128 + sector * SECTOR_SIZE;
     memcpy(buff, (void *)addr, SECTOR_SIZE);
@@ -117,8 +116,8 @@ void flash_read(unsigned char *buff, uint32_t sector, unsigned int count) {
   }
 }
 
-void flash_write(const unsigned char *buff, uint32_t sector,
-                 unsigned int count) {
+void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
+                      unsigned int count) {
   while (count--) {
     uint32_t page_index = sector / (FLASH_PAGE_SIZE / SECTOR_SIZE);
     uint32_t offset = (sector % (FLASH_PAGE_SIZE / SECTOR_SIZE)) * SECTOR_SIZE;
@@ -136,4 +135,8 @@ void flash_write(const unsigned char *buff, uint32_t sector,
   }
 }
 
-uint32_t GetSectorSize(void) { return SECTOR_SIZE; }
+uint32_t FLASH_disk_maxsector(void) {
+  return (FLASH_PAGE_SIZE / SECTOR_SIZE) * 32;
+}
+
+uint16_t FLASH_disk_sectorsize(void) { return SECTOR_SIZE; }

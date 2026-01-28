@@ -17,22 +17,28 @@
 #include "stm32u3_ram_disk.h"    // for RAM disk functions
 
 /* Example: Mapping of physical drive number for each drive */
-#define DEV_RAM 0 /* Map Ramdisk to physical drive 0 */
-// #define DEV_FLASH	0	/* Map FTL to physical drive 0 */
-#define DEV_MMC 1 /* Map MMC/SD card to physical drive 1 */
-#define DEV_USB 2 /* Map USB MSD to physical drive 2 */
+#define DEV_RAM 0   /* Map Ramdisk to physical drive 0 */
+#define DEV_FLASH 1 /* Map FTL to physical drive 1 */
+// define DEV_MMC 2   /* Map MMC/SD card to physical drive 2 */
+// #define DEV_USB 3   /* Map USB MSD to physical drive 3 */
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status(BYTE pdrv /* Physical drive nmuber to identify the drive */
 ) {
-  DSTATUS stat;
-  int result;
+  // DSTATUS stat;
+  // int result;
 
-  if (pdrv != DEV_RAM) return STA_NOINIT;
-
-  return 0;
+  switch (pdrv) {
+    case DEV_RAM:
+      return 0;
+    case DEV_FLASH:
+      return 0;
+    default:
+      return STA_NOINIT;
+  }
+  return STA_NOINIT;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -48,6 +54,9 @@ DSTATUS disk_initialize(
   switch (pdrv) {
     case DEV_RAM:
       RAM_disk_initialize();
+      return RES_OK;
+    case DEV_FLASH:
+      FLASH_disk_initialize();
       return RES_OK;
     default:
       return STA_NOINIT;
@@ -70,6 +79,9 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
   switch (pdrv) {
     case DEV_RAM:
       RAM_disk_read(buff, sector, count);
+      return RES_OK;
+    case DEV_FLASH:
+      FLASH_disk_read(buff, sector, count);
       return RES_OK;
     default:
       return RES_PARERR;
@@ -94,6 +106,9 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
   switch (pdrv) {
     case DEV_RAM:
       RAM_disk_write(buff, sector, count);
+      return RES_OK;
+    case DEV_FLASH:
+      FLASH_disk_write(buff, sector, count);
       return RES_OK;
     default:
       return RES_PARERR;
@@ -127,6 +142,24 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
           *(DWORD *)buff = 1;
           return RES_OK;
         case CTRL_SYNC:
+          return RES_OK;
+        default:
+          return RES_PARERR;
+      }
+      return RES_PARERR;
+    case DEV_FLASH:
+      switch (cmd) {
+        case GET_SECTOR_COUNT:
+          *(LBA_t *)buff = FLASH_disk_maxsector();
+          return RES_OK;
+        case GET_SECTOR_SIZE:
+          *(WORD *)buff = FLASH_disk_sectorsize();
+          return RES_OK;
+        case GET_BLOCK_SIZE:
+          *(DWORD *)buff = 1;
+          return RES_OK;
+        case CTRL_SYNC:
+          flush_page();
           return RES_OK;
         default:
           return RES_PARERR;

@@ -31,11 +31,13 @@ uint32_t GetBank(uint32_t Address);
 void chache_init(void);
 void load_page(uint32_t page_index);
 void flush_page(void);
-void flash_read(unsigned char *buff, uint32_t sector, unsigned int count);
-void flash_write(const unsigned char *buff, uint32_t sector,
-                 unsigned int count);
-uint32_t GetSectorSize(void);
 
+void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count);
+void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
+                      unsigned int count);
+void FLASH_disk_initialize(void);
+uint32_t FLASH_disk_maxsector(void);
+uint16_t FLASH_disk_sectorsize(void);
 #if defined(__cplusplus)
 }
 #endif
