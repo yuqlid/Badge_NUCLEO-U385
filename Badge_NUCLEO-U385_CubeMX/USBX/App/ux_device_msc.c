@@ -180,7 +180,7 @@ UINT USBD_STORAGE_Flush(VOID *storage_instance, ULONG lun, ULONG number_blocks,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Flush */
-    if (disk_ioctl(0, CTRL_SYNC, NULL) != RES_OK)
+    if (disk_ioctl(dev, CTRL_SYNC, NULL) != RES_OK)
     {
         *media_status = UX_ERROR;
         return UX_ERROR;
@@ -214,7 +214,7 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Status */
-  DSTATUS s = disk_status(0);
+  DSTATUS s = disk_status(dev);
 
     if (s & STA_NOINIT)
     {

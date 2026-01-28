@@ -41,8 +41,8 @@ DSTATUS disk_status(BYTE pdrv /* Physical drive nmuber to identify the drive */
 DSTATUS disk_initialize(
     BYTE pdrv /* Physical drive nmuber to identify the drive */
 ) {
-  //DSTATUS stat;
-  //int result;
+  // DSTATUS stat;
+  // int result;
 
   switch (pdrv) {
     case DEV_RAM:
@@ -113,8 +113,6 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
   DRESULT res;
   int result;
 
-  if (pdrv != DEV_RAM) return RES_PARERR;
-
   switch (pdrv) {
     case DEV_RAM:
       switch (cmd) {
@@ -126,6 +124,8 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
           return RES_OK;
         case GET_BLOCK_SIZE:
           *(DWORD *)buff = 1;
+          return RES_OK;
+        case CTRL_SYNC:
           return RES_OK;
         default:
           return RES_PARERR;
