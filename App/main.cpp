@@ -28,6 +28,7 @@
 #include "stm32u3_rcc_driver.hpp"
 #include "usart.h"
 #include "usb.h"
+#include "cli/cmd_flash.hpp"
 
 void SystemClock_Config(void);
 
@@ -130,6 +131,7 @@ int main(void) {
   EmbeddedCli *cli = embeddedCliNew(config);
   cli->writeChar = writeChar;
   bindGeneralCmds(cli);
+  bindFlashCmds(cli);
 
   while (1) {
     BSP_LED_Toggle(LED_GREEN);
@@ -141,7 +143,7 @@ int main(void) {
     }
     embeddedCliProcess(cli);
 
-    USBX_Device_Process(NULL);
+    //USBX_Device_Process(NULL);
   }
 }
 

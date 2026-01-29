@@ -100,9 +100,9 @@ void flush_page(void) {
   HAL_FLASHEx_Erase(&erase, &error);
 
   for (uint32_t i = 0; i < FLASH_PAGE_SIZE; i += 8) {
-    uint64_t data;
-    memcpy(&data, &page_cache[i], 8);
-    HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, page_addr + i, data);
+    /* DataAddress should point to the source data in page_cache */
+    HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, page_addr + i,
+                      (uint32_t)(&page_cache[i]));
   }
 
   HAL_FLASH_Lock();

@@ -136,7 +136,8 @@ App/dma_driver.cpp \
 App/retain_config/retain_config.cpp
 
 CPP_SOURCES += \
-App/cli/cmd_general.cpp
+App/cli/cmd_general.cpp \
+App/cli/cmd_flash.cpp \
 #App/cli/cmd_drv8316cr.cpp \
 #App/cli/cmd_voltage.cpp \
 #App/cli/cmd_eeprom.cpp \
