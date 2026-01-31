@@ -54,7 +54,7 @@
 /* USER CODE BEGIN 0 */
 #define DEV_RAM 0
 #define DEV_FLASH 1
-uint8_t dev = DEV_RAM;
+uint8_t dev = DEV_FLASH;
 /* USER CODE END 0 */
 
 /**
