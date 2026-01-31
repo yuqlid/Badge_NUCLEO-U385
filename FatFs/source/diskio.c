@@ -156,7 +156,7 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
           *(WORD *)buff = FLASH_disk_sectorsize();
           return RES_OK;
         case GET_BLOCK_SIZE:
-          *(DWORD *)buff = 1;
+          *(DWORD *)buff = 8;
           return RES_OK;
         case CTRL_SYNC:
           flush_page();
