@@ -105,21 +105,16 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Read */
-  if (disk_read(dev, data_pointer, lba, number_blocks) != RES_OK)
-  {
-      *media_status = UX_ERROR;
-      return UX_ERROR;
-  }
-
-  *media_status = UX_SUCCESS;
-  return UX_SUCCESS;
-  
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
-  //UX_PARAMETER_NOT_USED(data_pointer);
-  //UX_PARAMETER_NOT_USED(number_blocks);
-  //UX_PARAMETER_NOT_USED(lba);
-  //UX_PARAMETER_NOT_USED(media_status);
+
+  if (disk_read(dev, data_pointer, lba, number_blocks) != RES_OK)
+  {
+    *media_status = UX_ERROR;
+    return UX_ERROR;
+  }
+  *media_status = UX_SUCCESS;
+  return UX_SUCCESS;
   /* USER CODE END USBD_STORAGE_Read */
 
   return status;
@@ -143,6 +138,9 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Write */
+  UX_PARAMETER_NOT_USED(storage_instance);
+  UX_PARAMETER_NOT_USED(lun);
+
   if (disk_write(dev, data_pointer, lba, number_blocks) != RES_OK)
   {
       *media_status = UX_ERROR;
@@ -151,13 +149,6 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
 
   *media_status = UX_SUCCESS;
   return UX_SUCCESS;
-
-  UX_PARAMETER_NOT_USED(storage_instance);
-  UX_PARAMETER_NOT_USED(lun);
-  UX_PARAMETER_NOT_USED(data_pointer);
-  UX_PARAMETER_NOT_USED(number_blocks);
-  UX_PARAMETER_NOT_USED(lba);
-  //UX_PARAMETER_NOT_USED(media_status);
   /* USER CODE END USBD_STORAGE_Write */
 
   return status;
@@ -180,19 +171,19 @@ UINT USBD_STORAGE_Flush(VOID *storage_instance, ULONG lun, ULONG number_blocks,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Flush */
-    if (disk_ioctl(dev, CTRL_SYNC, NULL) != RES_OK)
-    {
-        *media_status = UX_ERROR;
-        return UX_ERROR;
-    }
-
-    *media_status = UX_SUCCESS;
-    return UX_SUCCESS;
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(number_blocks);
   UX_PARAMETER_NOT_USED(lba);
-  UX_PARAMETER_NOT_USED(media_status);
+
+  if (disk_ioctl(dev, CTRL_SYNC, NULL) != RES_OK)
+  {
+      *media_status = UX_ERROR;
+      return UX_ERROR;
+  }
+
+  *media_status = UX_SUCCESS;
+  return UX_SUCCESS;
   /* USER CODE END USBD_STORAGE_Flush */
 
   return status;
@@ -214,6 +205,9 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
   UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_STORAGE_Status */
+  UX_PARAMETER_NOT_USED(storage_instance);
+  UX_PARAMETER_NOT_USED(lun);
+  UX_PARAMETER_NOT_USED(media_id);
   DSTATUS s = disk_status(dev);
 
     if (s & STA_NOINIT)
@@ -223,10 +217,6 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
     }
 
   *media_status = UX_SUCCESS;
-  UX_PARAMETER_NOT_USED(storage_instance);
-  UX_PARAMETER_NOT_USED(lun);
-  UX_PARAMETER_NOT_USED(media_id);
-  //UX_PARAMETER_NOT_USED(media_status);
   /* USER CODE END USBD_STORAGE_Status */
 
   return status;
@@ -272,7 +262,6 @@ ULONG USBD_STORAGE_GetMediaLastLba(VOID)
   ULONG LastLba = 0U;
 
   /* USER CODE BEGIN USBD_STORAGE_GetMediaLastLba */
-
   disk_ioctl(dev, GET_SECTOR_COUNT, &LastLba);
   LastLba--;
   /* USER CODE END USBD_STORAGE_GetMediaLastLba */
