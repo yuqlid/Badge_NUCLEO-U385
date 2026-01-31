@@ -18,7 +18,7 @@ static uint8_t page_cache[FLASH_PAGE_SIZE] __attribute__((
 static uint32_t cached_page_index = 0xFFFFFFFF;
 static uint8_t cache_dirty = 0;
 
-#define FLASH_DISK_SIZE (128 * 1024)
+#define FLASH_DISK_SIZE (512 * 1024)
 
 /**
  * @brief  Gets the page of a given address
