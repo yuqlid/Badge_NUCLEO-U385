@@ -143,7 +143,7 @@ int main(void) {
     }
     embeddedCliProcess(cli);
 
-    //USBX_Device_Process(NULL);
+    USBX_Device_Process(NULL);
   }
 }
 
