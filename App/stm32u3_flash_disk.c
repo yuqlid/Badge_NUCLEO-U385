@@ -112,12 +112,25 @@ void flush_page(void) {
   cache_dirty = 0;
 }
 
-void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count) {
+void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count)
+{
   while (count--) {
-    uint32_t addr = ADDR_FLASH_PAGE_128 + sector * SECTOR_SIZE;
-    memcpy(buff, (void *)addr, SECTOR_SIZE);
+
+    uint32_t page_index = sector / (FLASH_PAGE_SIZE / SECTOR_SIZE);
+    uint32_t offset =
+        (sector % (FLASH_PAGE_SIZE / SECTOR_SIZE)) * SECTOR_SIZE;
+
+    if (page_index == cached_page_index) {
+      // キャッシュが最新
+      memcpy(buff, &page_cache[offset], SECTOR_SIZE);
+    } else {
+      // Flash から直接読む
+      uint32_t addr = ADDR_FLASH_PAGE_128 + sector * SECTOR_SIZE;
+      memcpy(buff, (void *)addr, SECTOR_SIZE);
+    }
+
     buff += SECTOR_SIZE;
-    sector += 1;
+    sector++;
   }
 }
 
