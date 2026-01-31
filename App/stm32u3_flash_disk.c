@@ -13,7 +13,8 @@
 
 #include "stm32u3xx_hal.h"
 
-static uint8_t page_cache[FLASH_PAGE_SIZE];  // 1Page(4kB) cache
+static uint8_t page_cache[FLASH_PAGE_SIZE] __attribute__((
+    aligned(8)));  // 1Page(4kB) cache, 8-byte aligned for HAL_FLASH_Program
 static uint32_t cached_page_index = 0xFFFFFFFF;
 static uint8_t cache_dirty = 0;
 
@@ -69,7 +70,9 @@ void chache_init(void) {
   cached_page_index = 0xFFFFFFFF;
   cache_dirty = 0;
 }
+
 void FLASH_disk_initialize(void) { chache_init(); }
+
 void load_page(uint32_t page_index) {
   uint32_t addr = ADDR_FLASH_PAGE_128 + page_index * FLASH_PAGE_SIZE;
   memcpy(page_cache, (void *)addr, FLASH_PAGE_SIZE);
