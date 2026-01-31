@@ -81,6 +81,7 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
       RAM_disk_read(buff, sector, count);
       return RES_OK;
     case DEV_FLASH:
+      printf("READ lba=%lu count=%lu\r\n", sector, count);
       FLASH_disk_read(buff, sector, count);
       return RES_OK;
     default:
@@ -108,6 +109,7 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
       RAM_disk_write(buff, sector, count);
       return RES_OK;
     case DEV_FLASH:
+      printf("WRITE lba=%lu count=%lu\r\n", sector, count);
       FLASH_disk_write(buff, sector, count);
       return RES_OK;
     default:
@@ -159,6 +161,7 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
           *(DWORD *)buff = 8;
           return RES_OK;
         case CTRL_SYNC:
+          printf("CTRL_SYNC\r\n");
           flush_page();
           return RES_OK;
         default:
