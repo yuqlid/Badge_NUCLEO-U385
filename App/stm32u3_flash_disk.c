@@ -15,7 +15,8 @@
 
 static uint8_t page_cache[FLASH_PAGE_SIZE] __attribute__((
     aligned(8)));  // 1Page(4kB) cache, 8-byte aligned for HAL_FLASH_Program
-static uint32_t cached_page_index = 0xFFFFFFFF;
+static uint32_t cached_page_index =
+    0xFFFFFFFF;  // キャッシュしているページを保持する
 static uint8_t cache_dirty = 0;
 
 #define FLASH_DISK_SIZE (512 * 1024)
@@ -66,6 +67,10 @@ uint32_t GetBank(uint32_t Addr) {
   return bank;
 }
 
+/**
+ * @brief キャッシュの初期化
+ *
+ */
 void chache_init(void) {
   cached_page_index = 0xFFFFFFFF;
   cache_dirty = 0;
@@ -73,13 +78,23 @@ void chache_init(void) {
 
 void FLASH_disk_initialize(void) { chache_init(); }
 
+/**
+ * @brief  Loads a page into the cache
+ *
+ * @param page_index
+ */
 void load_page(uint32_t page_index) {
   uint32_t addr = ADDR_FLASH_PAGE_128 + page_index * FLASH_PAGE_SIZE;
   memcpy(page_cache, (void *)addr, FLASH_PAGE_SIZE);
-  cached_page_index = page_index;
+  cached_page_index = page_index;  //  キャッシュしているページを更新
 }
 
+/**
+ * @brief  Flushes the cached page to flash memory
+ *
+ */
 void flush_page(void) {
+  // キャッシュが汚れていなければ何もしない
   if (!cache_dirty || cached_page_index == 0xFFFFFFFF) return;
 
   uint32_t page_addr =
@@ -112,13 +127,17 @@ void flush_page(void) {
   cache_dirty = 0;
 }
 
-void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count)
-{
+/**
+ * @brief Flashからセクタを読む
+ *
+ * @param buff
+ * @param sector
+ * @param count
+ */
+void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count) {
   while (count--) {
-
     uint32_t page_index = sector / (FLASH_PAGE_SIZE / SECTOR_SIZE);
-    uint32_t offset =
-        (sector % (FLASH_PAGE_SIZE / SECTOR_SIZE)) * SECTOR_SIZE;
+    uint32_t offset = (sector % (FLASH_PAGE_SIZE / SECTOR_SIZE)) * SECTOR_SIZE;
 
     if (page_index == cached_page_index) {
       // キャッシュが最新
@@ -134,12 +153,25 @@ void FLASH_disk_read(unsigned char *buff, uint32_t sector, unsigned int count)
   }
 }
 
+/**
+ * @brief Flashにセクタを書く
+ *
+ * @param buff
+ * @param sector
+ * @param count
+ */
 void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
                       unsigned int count) {
   while (count--) {
     uint32_t page_index = sector / (FLASH_PAGE_SIZE / SECTOR_SIZE);
     uint32_t offset = (sector % (FLASH_PAGE_SIZE / SECTOR_SIZE)) * SECTOR_SIZE;
 
+    /**
+     * @brief
+     * これから書き込みたいページが、キャッシュしているページと異なってなら、現在キャッシュしているページを保存する
+     * その後、書き込みたいページをキャッシュにロードする
+     *
+     */
     if (page_index != cached_page_index) {
       flush_page();
       load_page(page_index);
@@ -153,6 +185,16 @@ void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
   }
 }
 
+/**
+ * @brief  Gets the max sector number of the flash disk
+ *
+ * @return uint32_t
+ */
 uint32_t FLASH_disk_maxsector(void) { return FLASH_DISK_SIZE / SECTOR_SIZE; }
 
+/**
+ * @brief  Gets the sector size of the flash disk
+ *
+ * @return uint16_t
+ */
 uint16_t FLASH_disk_sectorsize(void) { return SECTOR_SIZE; }
