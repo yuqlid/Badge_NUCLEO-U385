@@ -82,6 +82,7 @@ VOID USBD_STORAGE_Deactivate(VOID *storage_instance)
 {
   /* USER CODE BEGIN USBD_STORAGE_Deactivate  */
   UX_PARAMETER_NOT_USED(storage_instance);
+  disk_ioctl(dev, CTRL_SYNC, NULL);
   /* USER CODE END USBD_STORAGE_Deactivate */
 
   return;
