@@ -11,7 +11,13 @@
 
 #include "stm32u3_flash_disk.h"
 
+#include <cstring>
+
 #include "stm32u3xx_hal.h"
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 static uint8_t page_cache[FLASH_PAGE_SIZE] __attribute__((
     aligned(8)));  // 1Page(4kB) cache, 8-byte aligned for HAL_FLASH_Program
@@ -198,3 +204,7 @@ uint32_t FLASH_disk_maxsector(void) { return FLASH_DISK_SIZE / SECTOR_SIZE; }
  * @return uint16_t
  */
 uint16_t FLASH_disk_sectorsize(void) { return SECTOR_SIZE; }
+
+#if defined(__cplusplus)
+}
+#endif

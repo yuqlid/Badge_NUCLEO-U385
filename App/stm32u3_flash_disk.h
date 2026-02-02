@@ -38,6 +38,7 @@ void FLASH_disk_write(const unsigned char *buff, uint32_t sector,
 void FLASH_disk_initialize(void);
 uint32_t FLASH_disk_maxsector(void);
 uint16_t FLASH_disk_sectorsize(void);
+
 #if defined(__cplusplus)
 }
 #endif

@@ -112,7 +112,7 @@ FatFs/source/diskio.c \
 FatFs/source/ffsystem.c \
 FatFs/source/ffunicode.c \
 App/stm32u3_ram_disk.c \
-App/stm32u3_flash_disk.c \
+
 
 
 # CubeMXで生成したファイルの読み込み
@@ -133,7 +133,8 @@ CPP_INCLUDES += \
 CPP_SOURCES = \
 App/main.cpp \
 App/dma_driver.cpp \
-App/retain_config/retain_config.cpp
+App/retain_config/retain_config.cpp \
+App/stm32u3_flash_disk.cpp \
 
 CPP_SOURCES += \
 App/cli/cmd_general.cpp \
