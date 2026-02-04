@@ -135,6 +135,7 @@ App/main.cpp \
 App/dma_driver.cpp \
 App/retain_config/retain_config.cpp \
 App/stm32u3_flash_disk.cpp \
+App/GC9A01.cpp \
 
 CPP_SOURCES += \
 App/cli/cmd_general.cpp \
