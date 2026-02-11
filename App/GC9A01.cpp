@@ -27,8 +27,8 @@
 #define MEM_WR_CONT 0x3C
 #define ON 1
 #define OFF 0
-#define RESET_ON LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_6)
-#define RESET_OFF LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_6)
+#define RESET_ON LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9)
+#define RESET_OFF LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9)
 #define DC_ON LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_7)
 #define DC_OFF LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_7)
 #define CS_ON LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_4)

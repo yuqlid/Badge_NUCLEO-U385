@@ -24,6 +24,7 @@ $(CUBEMX)/Core/Src/gpio.c \
 $(CUBEMX)/Core/Src/icache.c \
 $(CUBEMX)/Core/Src/spi.c \
 $(CUBEMX)/Core/Src/usart.c \
+$(CUBEMX)/Core/Src/tim.c \
 $(CUBEMX)/Core/Src/gpdma.c \
 $(CUBEMX)/Core/Src/stm32u3xx_it.c \
 $(CUBEMX)/Core/Src/stm32u3xx_hal_msp.c \

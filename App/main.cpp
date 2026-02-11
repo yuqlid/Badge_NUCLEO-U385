@@ -11,9 +11,10 @@
 
 #include "main.h"
 
-#include <cstdio>
 #include <cstdint>
+#include <cstdio>
 
+#include "GC9A01.hpp"
 #include "app_usbx_device.h"
 #include "build_info.hpp"
 #include "cli/cmd_flash.hpp"
@@ -28,10 +29,10 @@
 #include "spi.h"
 #include "stm32u3_device.hpp"
 #include "stm32u3_rcc_driver.hpp"
+#include "stm32u3xx_ll_tim.h"
+#include "tim.h"
 #include "usart.h"
 #include "usb.h"
-
-#include "GC9A01.hpp"
 
 void SystemClock_Config(void);
 
@@ -81,6 +82,24 @@ static void print_boot_info(uint32_t csr) {
 ringBufferWithDma<uint8_t, 32> uasart1_rx_ringbuff(
     GetDmaCBR1(GPDMA1, LL_DMA_CHANNEL_0));
 
+uint16_t pwm_value = 0;
+
+void setPWM(int8_t mode) {
+  if (mode == 0) {
+    while (pwm_value > 0) {
+      pwm_value += -1;
+      LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
+      HAL_Delay(5);
+    }
+  } else {
+    while (pwm_value < 500) {
+      pwm_value += 1;
+      LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
+      HAL_Delay(5);
+    }
+  }
+}
+
 int main(void) {
   retainConfigInit();
   uint32_t csr = stm32u3rccdriver.getRsr();
@@ -96,6 +115,7 @@ int main(void) {
   MX_ICACHE_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   unsigned int ret = MX_USBX_Device_Init();
 
   /* Initialize leds */
@@ -135,9 +155,16 @@ int main(void) {
   cli->writeChar = writeChar;
   bindGeneralCmds(cli);
   bindFlashCmds(cli);
-  LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9); // Backlight off
+  // LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);  // Backlight off
   GC9A01_init();
-  struct GC9A01_frame frame = {{0,0},{239,239}};
+
+  LL_TIM_OC_SetMode(TIM3, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1);
+  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH1);
+  LL_TIM_EnableAllOutputs(TIM3);
+  LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
+  LL_TIM_EnableCounter(TIM3);
+
+  struct GC9A01_frame frame = {{0, 0}, {239, 239}};
   GC9A01_set_frame(frame);
   while (1) {
     /*
@@ -152,62 +179,62 @@ int main(void) {
 
     USBX_Device_Process(NULL);
     */
-   uint8_t color[3];
+    uint8_t color[3];
     // Triangle
     color[0] = 0xFF;
     color[1] = 0xFF;
     for (int x = 0; x < 240; x++) {
-        for (int y = 0; y < 240; y++) {
-            if (x < y) {
-                color[2] = 0xFF;
-            } else {
-                color[2] = 0x00;
-            }
-            if (x == 0 && y == 0) {
-                GC9A01_write(color, sizeof(color));
-            } else {
-                GC9A01_write_continue(color, sizeof(color));
-            }
+      for (int y = 0; y < 240; y++) {
+        if (x < y) {
+          color[2] = 0xFF;
+        } else {
+          color[2] = 0x00;
         }
+        if (x == 0 && y == 0) {
+          GC9A01_write(color, sizeof(color));
+        } else {
+          GC9A01_write_continue(color, sizeof(color));
+        }
+      }
     }
-    //setPWM(1);
+    setPWM(1);
     LL_mDelay(1000);
     // setPWM(0);
     // Rainbow
     float frequency = 0.026;
     for (int x = 0; x < 240; x++) {
-        color[0] = sin(frequency*x + 0) * 127 + 128;
-        color[1] = sin(frequency*x + 2) * 127 + 128;
-        color[2] = sin(frequency*x + 4) * 127 + 128;
-        for (int y = 0; y < 240; y++) {
-            if (x == 0 && y == 0) {
-                GC9A01_write(color, sizeof(color));
-            } else {
-                GC9A01_write_continue(color, sizeof(color));
-            }
+      color[0] = sin(frequency * x + 0) * 127 + 128;
+      color[1] = sin(frequency * x + 2) * 127 + 128;
+      color[2] = sin(frequency * x + 4) * 127 + 128;
+      for (int y = 0; y < 240; y++) {
+        if (x == 0 && y == 0) {
+          GC9A01_write(color, sizeof(color));
+        } else {
+          GC9A01_write_continue(color, sizeof(color));
         }
+      }
     }
     // setPWM(1);
     LL_mDelay(1000);
     // setPWM(0);
     // Checkerboard
     for (int x = 0; x < 240; x++) {
-        for (int y = 0; y < 240; y++) {
-            if ((x / 10) % 2 ==  (y / 10) % 2) {
-                color[0] = 0xFF;
-                color[1] = 0xFF;
-                color[2] = 0xFF;
-            } else {
-                color[0] = 0x00;
-                color[1] = 0x00;
-                color[2] = 0x00;
-            }
-            if (x == 0 && y == 0) {
-                GC9A01_write(color, sizeof(color));
-            } else {
-                GC9A01_write_continue(color, sizeof(color));
-            }
+      for (int y = 0; y < 240; y++) {
+        if ((x / 10) % 2 == (y / 10) % 2) {
+          color[0] = 0xFF;
+          color[1] = 0xFF;
+          color[2] = 0xFF;
+        } else {
+          color[0] = 0x00;
+          color[1] = 0x00;
+          color[2] = 0x00;
         }
+        if (x == 0 && y == 0) {
+          GC9A01_write(color, sizeof(color));
+        } else {
+          GC9A01_write_continue(color, sizeof(color));
+        }
+      }
     }
     // setPWM(1);
     LL_mDelay(1000);
@@ -215,21 +242,21 @@ int main(void) {
     // Swiss flag
     color[0] = 0xFF;
     for (int x = 0; x < 240; x++) {
-        for (int y = 0; y < 240; y++) {
-            if ((x >= 1*48 && x < 4*48 && y >= 2*48 && y < 3*48) ||
-                (x >= 2*48 && x < 3*48 && y >= 1*48 && y < 4*48)) {
-                color[1] = 0xFF;
-                color[2] = 0xFF;
-            } else {
-                color[1] = 0x00;
-                color[2] = 0x00;
-            }
-            if (x == 0 && y == 0) {
-                GC9A01_write(color, sizeof(color));
-            } else {
-                GC9A01_write_continue(color, sizeof(color));
-            }
+      for (int y = 0; y < 240; y++) {
+        if ((x >= 1 * 48 && x < 4 * 48 && y >= 2 * 48 && y < 3 * 48) ||
+            (x >= 2 * 48 && x < 3 * 48 && y >= 1 * 48 && y < 4 * 48)) {
+          color[1] = 0xFF;
+          color[2] = 0xFF;
+        } else {
+          color[1] = 0x00;
+          color[2] = 0x00;
         }
+        if (x == 0 && y == 0) {
+          GC9A01_write(color, sizeof(color));
+        } else {
+          GC9A01_write_continue(color, sizeof(color));
+        }
+      }
     }
     // setPWM(1);
     GC9A01_write_command(0x20);
