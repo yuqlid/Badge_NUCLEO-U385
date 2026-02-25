@@ -112,6 +112,8 @@ FatFs/source/diskio.c \
 FatFs/source/ffsystem.c \
 FatFs/source/ffunicode.c \
 App/stm32u3_ram_disk.c \
+App/gc9a01a.c \
+App/app.c
 
 
 
@@ -135,7 +137,7 @@ App/main.cpp \
 App/dma_driver.cpp \
 App/retain_config/retain_config.cpp \
 App/stm32u3_flash_disk.cpp \
-App/GC9A01.cpp \
+
 
 CPP_SOURCES += \
 App/cli/cmd_general.cpp \

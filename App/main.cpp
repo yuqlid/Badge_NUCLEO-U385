@@ -14,7 +14,7 @@
 #include <cstdint>
 #include <cstdio>
 
-#include "GC9A01.hpp"
+#include "app.h"
 #include "app_usbx_device.h"
 #include "build_info.hpp"
 #include "cli/cmd_flash.hpp"
@@ -33,6 +33,31 @@
 #include "tim.h"
 #include "usart.h"
 #include "usb.h"
+
+typedef struct {
+  uint16_t bfType;
+  uint32_t bfSize;
+  uint16_t bfReserved1;
+  uint16_t bfReserved2;
+  uint32_t bfOffBits;
+
+  uint32_t biSize;
+  int32_t biWidth;
+  int32_t biHeight;
+  uint16_t biPlanes;
+  uint16_t biBitCount;
+  uint32_t biCompression;
+  uint32_t biSizeImage;
+  int32_t biXPelsPerMeter;
+  int32_t biYPelsPerMeter;
+  uint32_t biClrUsed;
+  uint32_t biClrImportant;
+} __attribute__((packed)) BMPHeader;
+
+#define LCD_W 240
+
+uint8_t linebuf[LCD_W * 3];  // BGR888
+uint16_t rgb565buf[LCD_W];   // 変換後
 
 void SystemClock_Config(void);
 
@@ -82,7 +107,7 @@ static void print_boot_info(uint32_t csr) {
 ringBufferWithDma<uint8_t, 32> uasart1_rx_ringbuff(
     GetDmaCBR1(GPDMA1, LL_DMA_CHANNEL_0));
 
-uint16_t pwm_value = 0;
+uint16_t pwm_value = 250;
 
 void setPWM(int8_t mode) {
   if (mode == 0) {
@@ -155,17 +180,21 @@ int main(void) {
   cli->writeChar = writeChar;
   bindGeneralCmds(cli);
   bindFlashCmds(cli);
+
   // LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);  // Backlight off
-  GC9A01_init();
+  //  GC9A01_init();
 
   LL_TIM_OC_SetMode(TIM3, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1);
+  LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableAllOutputs(TIM3);
-  LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
+
   LL_TIM_EnableCounter(TIM3);
 
-  struct GC9A01_frame frame = {{0, 0}, {239, 239}};
-  GC9A01_set_frame(frame);
+  APP_init();
+
+  // struct GC9A01_frame frame = {{0, 0}, {239, 239}};
+  // GC9A01_set_frame(frame);
   while (1) {
     /*
     BSP_LED_Toggle(LED_GREEN);
@@ -179,88 +208,8 @@ int main(void) {
 
     USBX_Device_Process(NULL);
     */
-    uint8_t color[3];
-    // Triangle
-    color[0] = 0xFF;
-    color[1] = 0xFF;
-    for (int x = 0; x < 240; x++) {
-      for (int y = 0; y < 240; y++) {
-        if (x < y) {
-          color[2] = 0xFF;
-        } else {
-          color[2] = 0x00;
-        }
-        if (x == 0 && y == 0) {
-          GC9A01_write(color, sizeof(color));
-        } else {
-          GC9A01_write_continue(color, sizeof(color));
-        }
-      }
-    }
-    setPWM(1);
-    LL_mDelay(1000);
-    // setPWM(0);
-    // Rainbow
-    float frequency = 0.026;
-    for (int x = 0; x < 240; x++) {
-      color[0] = sin(frequency * x + 0) * 127 + 128;
-      color[1] = sin(frequency * x + 2) * 127 + 128;
-      color[2] = sin(frequency * x + 4) * 127 + 128;
-      for (int y = 0; y < 240; y++) {
-        if (x == 0 && y == 0) {
-          GC9A01_write(color, sizeof(color));
-        } else {
-          GC9A01_write_continue(color, sizeof(color));
-        }
-      }
-    }
-    // setPWM(1);
-    LL_mDelay(1000);
-    // setPWM(0);
-    // Checkerboard
-    for (int x = 0; x < 240; x++) {
-      for (int y = 0; y < 240; y++) {
-        if ((x / 10) % 2 == (y / 10) % 2) {
-          color[0] = 0xFF;
-          color[1] = 0xFF;
-          color[2] = 0xFF;
-        } else {
-          color[0] = 0x00;
-          color[1] = 0x00;
-          color[2] = 0x00;
-        }
-        if (x == 0 && y == 0) {
-          GC9A01_write(color, sizeof(color));
-        } else {
-          GC9A01_write_continue(color, sizeof(color));
-        }
-      }
-    }
-    // setPWM(1);
-    LL_mDelay(1000);
-    // setPWM(0);
-    // Swiss flag
-    color[0] = 0xFF;
-    for (int x = 0; x < 240; x++) {
-      for (int y = 0; y < 240; y++) {
-        if ((x >= 1 * 48 && x < 4 * 48 && y >= 2 * 48 && y < 3 * 48) ||
-            (x >= 2 * 48 && x < 3 * 48 && y >= 1 * 48 && y < 4 * 48)) {
-          color[1] = 0xFF;
-          color[2] = 0xFF;
-        } else {
-          color[1] = 0x00;
-          color[2] = 0x00;
-        }
-        if (x == 0 && y == 0) {
-          GC9A01_write(color, sizeof(color));
-        } else {
-          GC9A01_write_continue(color, sizeof(color));
-        }
-      }
-    }
-    // setPWM(1);
-    GC9A01_write_command(0x20);
-    LL_mDelay(1000);
+    HAL_Delay(1);
+    APP_main();
   }
 }
 
