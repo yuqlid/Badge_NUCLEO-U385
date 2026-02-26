@@ -20,7 +20,7 @@ uint8_t counter;
 GC9A01A tft1;
 
 void APP_init() {
-  printf("GC9A01A Test!\n");
+  printf("GC9A01A Test!\r\n");
 
   GC9A01A_init(&tft1, &hspi1, TFT1_CS_GPIO, TFT1_CS_PIN, TFT1_DC_GPIO,
                TFT1_DC_PIN, TFT1_BL_GPIO, TFT1_BL_PIN, TFT1_RST_GPIO,
