@@ -16,6 +16,7 @@ def convert(img_path):
         print('Image size must be 240x240')
         return
     
+    # Convert BGR to RGB for proper color handling
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
     # convert to np array
@@ -24,10 +25,20 @@ def convert(img_path):
     with open('img.bin', 'wb') as f:
         for i in range(0, img.shape[0], 3):
             # convert to 565 binary
-            r = img[i]
-            g = img[i+1]
-            b = img[i+2]
-            rgb = struct.pack('H', ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3))
+            # Note: img is now in RGB order after cvtColor conversion
+            r = img[i]      # Red
+            g = img[i+1]    # Green
+            b = img[i+2]    # Blue
+            
+            # Convert 8-bit to 5/6-bit
+            r5 = int((r >> 3) & 0x1F)  # 5 bits
+            g6 = int((g >> 2) & 0x3F)  # 6 bits
+            b5 = int((b >> 3) & 0x1F)  # 5 bits
+            
+            # Pack as RGB565: RRRRRGGGGGGBBBBB (16-bit, little-endian)
+            rgb565 = ((r5 << 11) | (g6 << 5) | b5) & 0xFFFF
+            
+            rgb = struct.pack('<H', rgb565)  # Explicit little-endian
             f.write(rgb)
     print('Convert done')
     
