@@ -1,2 +1,3 @@
 Badge_NUCLEO-U385_CubeMX/build/
 build/
+.venv/
