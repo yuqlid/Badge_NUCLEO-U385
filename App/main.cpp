@@ -197,18 +197,16 @@ int main(void) {
   // GC9A01_set_frame(frame);
   while (1) {
     /*
-    BSP_LED_Toggle(LED_GREEN);
+    USBX_Device_Process(NULL);
+    */
     HAL_Delay(1);
+    BSP_LED_Toggle(LED_GREEN);
 
     while (!uasart1_rx_ringbuff.isEmpty()) {
       embeddedCliReceiveChar(cli,
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
     }
     embeddedCliProcess(cli);
-
-    USBX_Device_Process(NULL);
-    */
-    HAL_Delay(1);
     APP_main();
   }
 }
