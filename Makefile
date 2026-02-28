@@ -142,6 +142,7 @@ App/stm32u3_flash_disk.cpp \
 CPP_SOURCES += \
 App/cli/cmd_general.cpp \
 App/cli/cmd_flash.cpp \
+APp/cli/cmd_gc9a01.cpp \
 #App/cli/cmd_drv8316cr.cpp \
 #App/cli/cmd_voltage.cpp \
 #App/cli/cmd_eeprom.cpp \

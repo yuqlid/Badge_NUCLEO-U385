@@ -19,6 +19,7 @@
 #include "build_info.hpp"
 #include "cli/cmd_flash.hpp"
 #include "cli/cmd_general.hpp"
+#include "cli/cmd_gc9a01.hpp"
 #include "dma_driver.hpp"
 #include "embedded_cli.h"
 #include "gpdma.h"
@@ -180,6 +181,7 @@ int main(void) {
   cli->writeChar = writeChar;
   bindGeneralCmds(cli);
   bindFlashCmds(cli);
+  bindGC9A01Cmds(cli);
 
   // LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);  // Backlight off
   //  GC9A01_init();
