@@ -94,14 +94,10 @@ void GC9A01A_set_addr_window(GC9A01A *tft, uint16_t x1, uint16_t y1, uint16_t w,
 }
 
 void GC9A01A_draw_pixel(GC9A01A *tft, int16_t x, int16_t y, uint16_t color) {
-
-
   GC9A01A_set_addr_window(tft, x, y, 1, 1);
 
   GC9A01A_set_spi_datasize(tft, SPI_DATASIZE_16BIT);
   GC9A01A_transmit_data(tft, 1, &color);
-
-
 }
 
 void GC9A01A_draw_pixels(GC9A01A *tft, uint16_t x, uint16_t y, uint16_t *color,
@@ -119,6 +115,15 @@ void GC9A01A_draw_pixels(GC9A01A *tft, uint16_t x, uint16_t y, uint16_t *color,
   }
 
   // GC9A01A_end_spi_transaction(tft);
+}
+
+void GC9A01A_draw_pixels2(GC9A01A *tft, uint16_t x, uint16_t y, uint16_t *color,
+                          uint16_t width, uint16_t height) {
+  GC9A01A_set_addr_window(tft, x, y, width, height);
+
+  uint16_t *data_ptr = color;
+  GC9A01A_set_spi_datasize(tft, SPI_DATASIZE_16BIT);
+  GC9A01A_transmit_data(tft, width * height, data_ptr);
 }
 
 void GC9A01A_draw_screen(GC9A01A *tft, uint16_t *img) {

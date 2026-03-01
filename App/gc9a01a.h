@@ -127,7 +127,7 @@ static const uint8_t INIT_CMD[] = {
     0x8E, 1, 0xFF,                                            // ?
     0x8F, 1, 0xFF,                                            // ?
     0xB6, 2, 0x00, 0x00,                                      // ?
-    GC9A01A_MADCTL, 1, MADCTL_MX | MADCTL_BGR, GC9A01A_COLMOD, 1, 0x05, 0x90, 4,
+    GC9A01A_MADCTL, 1, MADCTL_MY | MADCTL_BGR, GC9A01A_COLMOD, 1, 0x05, 0x90, 4,
     0x08, 0x08, 0x08, 0x08,     // ?
     0xBD, 1, 0x06,              // ?
     0xBC, 1, 0x00,              // ?

@@ -192,6 +192,7 @@ PC7.Signal=GPIO_Output
 PC9.Locked=true
 PC9.Signal=GPIO_Output
 PCC.Checker=false
+PCC.Display=Plot\: All Steps
 PCC.Line=STM32U3x5
 PCC.MCU=STM32U385RGTxQ
 PCC.PartNumber=STM32U385RGTxQ

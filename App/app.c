@@ -38,9 +38,8 @@ void APP_main() {
   //  sprintf(str, "Done!\n");
   //  HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 100);
 
-   GC9A01A_draw_screen(&tft1, (uint16_t *)image_data);
+  GC9A01A_draw_screen(&tft1, (uint16_t *)image_data);
 
-  
   //  for (int i=0; i<120; i+=1) {
   //     GC9A01A_draw_pixel(&tft1, 120, i, color565(0, 128, 255));
   //  }
