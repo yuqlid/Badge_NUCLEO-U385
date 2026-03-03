@@ -57,6 +57,7 @@ DSTATUS disk_initialize(
       return RES_OK;
     case DEV_FLASH:
       FLASH_disk_initialize();
+      printf("Flash disk initialized\r\n");
       return RES_OK;
     default:
       return STA_NOINIT;
