@@ -17,6 +17,7 @@
 #include "app.h"
 #include "app_usbx_device.h"
 #include "build_info.hpp"
+#include "cli/cmd_fatfs.hpp"
 #include "cli/cmd_flash.hpp"
 #include "cli/cmd_gc9a01.hpp"
 #include "cli/cmd_general.hpp"
@@ -141,9 +142,7 @@ int main(void) {
   bindGeneralCmds(cli);
   bindFlashCmds(cli);
   bindGC9A01Cmds(cli);
-
-  // LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);  // Backlight off
-  //  GC9A01_init();
+  bindFatfsCmds(cli);
 
   LL_TIM_OC_SetMode(TIM3, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1);
   LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
