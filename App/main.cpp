@@ -18,8 +18,8 @@
 #include "app_usbx_device.h"
 #include "build_info.hpp"
 #include "cli/cmd_flash.hpp"
-#include "cli/cmd_general.hpp"
 #include "cli/cmd_gc9a01.hpp"
+#include "cli/cmd_general.hpp"
 #include "dma_driver.hpp"
 #include "embedded_cli.h"
 #include "gpdma.h"
@@ -34,31 +34,6 @@
 #include "tim.h"
 #include "usart.h"
 #include "usb.h"
-
-typedef struct {
-  uint16_t bfType;
-  uint32_t bfSize;
-  uint16_t bfReserved1;
-  uint16_t bfReserved2;
-  uint32_t bfOffBits;
-
-  uint32_t biSize;
-  int32_t biWidth;
-  int32_t biHeight;
-  uint16_t biPlanes;
-  uint16_t biBitCount;
-  uint32_t biCompression;
-  uint32_t biSizeImage;
-  int32_t biXPelsPerMeter;
-  int32_t biYPelsPerMeter;
-  uint32_t biClrUsed;
-  uint32_t biClrImportant;
-} __attribute__((packed)) BMPHeader;
-
-#define LCD_W 240
-
-uint8_t linebuf[LCD_W * 3];  // BGR888
-uint16_t rgb565buf[LCD_W];   // 変換後
 
 void SystemClock_Config(void);
 
@@ -109,22 +84,6 @@ ringBufferWithDma<uint8_t, 32> uasart1_rx_ringbuff(
     GetDmaCBR1(GPDMA1, LL_DMA_CHANNEL_0));
 
 uint16_t pwm_value = 250;
-
-void setPWM(int8_t mode) {
-  if (mode == 0) {
-    while (pwm_value > 0) {
-      pwm_value += -1;
-      LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
-      HAL_Delay(5);
-    }
-  } else {
-    while (pwm_value < 500) {
-      pwm_value += 1;
-      LL_TIM_OC_SetCompareCH1(TIM3, pwm_value);
-      HAL_Delay(5);
-    }
-  }
-}
 
 int main(void) {
   retainConfigInit();
@@ -195,12 +154,8 @@ int main(void) {
 
   APP_init();
 
-  // struct GC9A01_frame frame = {{0, 0}, {239, 239}};
-  // GC9A01_set_frame(frame);
   while (1) {
-    /*
     USBX_Device_Process(NULL);
-    */
     HAL_Delay(1);
     BSP_LED_Toggle(LED_GREEN);
 
@@ -209,7 +164,6 @@ int main(void) {
                              static_cast<char>(uasart1_rx_ringbuff.dequeue()));
     }
     embeddedCliProcess(cli);
-    APP_main();
   }
 }
 

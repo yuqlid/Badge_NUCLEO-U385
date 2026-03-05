@@ -15,12 +15,10 @@ extern uint8_t image_data[];
 extern size_t image_start[];
 extern size_t image_end[];
 
-uint8_t counter;
-
 GC9A01A tft1;
 
 void APP_init() {
-  printf("GC9A01A Test!\r\n");
+  printf("GC9A01A Init!\r\n");
 
   GC9A01A_init(&tft1, &hspi1, TFT1_CS_GPIO, TFT1_CS_PIN, TFT1_DC_GPIO,
                TFT1_DC_PIN, TFT1_BL_GPIO, TFT1_BL_PIN, TFT1_RST_GPIO,
@@ -33,19 +31,6 @@ void APP_init() {
   }
 }
 
-void APP_main() {
-  //  char str[128];
-  //  sprintf(str, "Done!\n");
-  //  HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 100);
+void Print_fixedImage() { GC9A01A_draw_screen(&tft1, (uint16_t *)image_data); }
 
-  GC9A01A_draw_screen(&tft1, (uint16_t *)image_data);
-
-  //  for (int i=0; i<120; i+=1) {
-  //     GC9A01A_draw_pixel(&tft1, 120, i, color565(0, 128, 255));
-  //  }
-  //  for (int i=0; i<120; i+=1) {
-  //    GC9A01A_draw_pixel(&tft1, i, 120, color565(255, 128, 0));
-  //  }
-
-  counter += 1;
-}
+void APP_main() { GC9A01A_draw_screen(&tft1, (uint16_t *)image_data); }

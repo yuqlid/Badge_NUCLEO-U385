@@ -9,19 +9,16 @@
 #define INC_APP_H_
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "gc9a01a.h"
 #include "stm32u3xx_hal.h"
 #include "stm32u3xx_ll_gpio.h"
-#include "gc9a01a.h"
-
-
 
 // http://elm-chan.org/junk/32bit/binclude.html
 #define INCLUDE_FILE(section, filename, symbol) asm (\
@@ -60,6 +57,8 @@
 void APP_init();
 
 void APP_main();
+
+void Print_fixedImage();
 
 #if defined(__cplusplus)
 }

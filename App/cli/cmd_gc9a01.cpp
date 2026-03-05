@@ -15,7 +15,8 @@
 #include <cstdio>
 #include <cstring>
 
-#include "tim.h"
+#include "app.h"
+#include "main.h"
 
 static void Cmd_BackLight(EmbeddedCli *cli, char *args, void *context) {
   const char *arg1 = embeddedCliGetToken(args, 1);
@@ -39,7 +40,18 @@ CliCommandBinding cmd_backlight = {.name = "bl",
                                    .tokenizeArgs = false,
                                    .context = NULL,
                                    .binding = Cmd_BackLight};
+static void Cmd_UpdateImage(EmbeddedCli *cli, char *args, void *context) {
+  printf("Updating image...\r\n");
+  Print_fixedImage();
+}
+
+CliCommandBinding cmd_updateimage = {.name = "update",
+                                     .help = "Update Image",
+                                     .tokenizeArgs = false,
+                                     .context = NULL,
+                                     .binding = Cmd_UpdateImage};
 
 void bindGC9A01Cmds(EmbeddedCli *cli) {
   embeddedCliAddBinding(cli, cmd_backlight);
+  embeddedCliAddBinding(cli, cmd_updateimage);
 }
