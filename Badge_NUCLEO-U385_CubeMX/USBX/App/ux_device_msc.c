@@ -141,13 +141,16 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   /* USER CODE BEGIN USBD_STORAGE_Write */
   UX_PARAMETER_NOT_USED(storage_instance);
   UX_PARAMETER_NOT_USED(lun);
-
-  if (disk_write(dev, data_pointer, lba, number_blocks) != RES_OK)
-  {
-      *media_status = UX_ERROR;
-      return UX_ERROR;
+  #if FF_FS_READONLY == 0
+  if (disk_write(dev, data_pointer, lba, number_blocks) != RES_OK) {
+    *media_status = UX_ERROR;
+    return UX_ERROR;
   }
-
+#else
+  UX_PARAMETER_NOT_USED(data_pointer);
+  UX_PARAMETER_NOT_USED(number_blocks);
+  UX_PARAMETER_NOT_USED(lba);
+#endif
   *media_status = UX_SUCCESS;
   return UX_SUCCESS;
   /* USER CODE END USBD_STORAGE_Write */
