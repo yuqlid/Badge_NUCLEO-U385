@@ -23,6 +23,8 @@ extern uint8_t ram_disk[];
 extern GC9A01A tft1;
 static unsigned int read;
 
+extern uint8_t ram_disk[];
+
 static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
   FATFS fs;
   FRESULT res =
