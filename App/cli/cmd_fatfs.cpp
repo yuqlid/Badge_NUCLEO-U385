@@ -18,16 +18,15 @@
 #include "ff.h"
 #include "gc9a01a.h"
 
-static uint8_t buffer[480];
-extern uint8_t ram_disk[];
 extern GC9A01A tft1;
-static unsigned int read;
-
 extern uint8_t ram_disk[];
+
+static unsigned int read;
+static FATFS fs;
+
 TCHAR path[] = "1:";  // Path to the drive (flash disk)
 
 static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
-  FATFS fs;
   FRESULT res = f_mount(&fs, path, 1);
   if (res != FR_OK) {
     printf("Failed to mount filesystem: %d\r\n", res);
@@ -36,9 +35,18 @@ static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
 
   f_chdrive(path);  // Change current drive to 1 (flash disk)
                     // 相対パスを指定するために必要
-  FIL file;
+  printf("Filesystem mounted successfully\r\n");
+}
 
-  res = f_open(&file, "img2.bin", FA_READ);
+CliCommandBinding cmd_mount = {.name = "mount",
+                               .help = "Mount filesystem",
+                               .tokenizeArgs = false,
+                               .context = NULL,
+                               .binding = Cmd_mount};
+
+static void Cmd_readfile(EmbeddedCli *cli, char *args, void *context) {
+  FIL file;
+  FRESULT res = f_open(&file, "img2.bin", FA_READ);
   if (res != FR_OK) {
     printf("Failed to open file: %d\r\n", res);
     return;
@@ -55,10 +63,13 @@ static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
   f_close(&file);
 }
 
-CliCommandBinding cmd_mount = {.name = "mount",
-                               .help = "Mount filesystem",
-                               .tokenizeArgs = false,
-                               .context = NULL,
-                               .binding = Cmd_mount};
+CliCommandBinding cmd_readfile = {.name = "readfile",
+                                  .help = "Read file from filesystem",
+                                  .tokenizeArgs = false,
+                                  .context = NULL,
+                                  .binding = Cmd_readfile};
 
-void bindFatfsCmds(EmbeddedCli *cli) { embeddedCliAddBinding(cli, cmd_mount); }
+void bindFatfsCmds(EmbeddedCli *cli) {
+  embeddedCliAddBinding(cli, cmd_mount);
+  embeddedCliAddBinding(cli, cmd_readfile);
+}
