@@ -46,10 +46,10 @@ static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
 
   GC9A01A_set_windows_size(&tft1);
 
-  f_read(&file, ram_disk, 240 * 240 * 2, &read); 
+  f_read(&file, ram_disk, 240 * 240 * 2, &read);
   printf("Read %u bytes from file\r\n", read);
   GC9A01A_transmit_data(
-      &tft1, 240 * 240 * 2,
+      &tft1, 240 * 240,
       reinterpret_cast<uint16_t *>(ram_disk));  // Push one row
 
   f_close(&file);
