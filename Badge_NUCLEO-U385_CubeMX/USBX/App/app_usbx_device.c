@@ -258,7 +258,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
    UINT status = UX_SUCCESS;
 
   /* USER CODE BEGIN USBD_ChangeFunction0 */
-
+  //printf("Device State Changed: %lu\r\n", Device_State);
   /* USER CODE END USBD_ChangeFunction0 */
 
   switch (Device_State)
@@ -266,7 +266,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DEVICE_ATTACHED:
 
       /* USER CODE BEGIN UX_DEVICE_ATTACHED */
-
+      //printf("USB Attached\r\n");
       /* USER CODE END UX_DEVICE_ATTACHED */
 
       break;
@@ -274,7 +274,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DEVICE_REMOVED:
 
       /* USER CODE BEGIN UX_DEVICE_REMOVED */
-
+      //printf("USB Removed\r\n");
       /* USER CODE END UX_DEVICE_REMOVED */
 
       break;
@@ -282,7 +282,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DCD_STM32_DEVICE_CONNECTED:
 
       /* USER CODE BEGIN UX_DCD_STM32_DEVICE_CONNECTED */
-
+      //printf("USB Connected\r\n");
       /* USER CODE END UX_DCD_STM32_DEVICE_CONNECTED */
 
       break;
@@ -290,7 +290,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DCD_STM32_DEVICE_DISCONNECTED:
 
       /* USER CODE BEGIN UX_DCD_STM32_DEVICE_DISCONNECTED */
-
+      //printf("USB Disconnected\r\n");
       /* USER CODE END UX_DCD_STM32_DEVICE_DISCONNECTED */
 
       break;
@@ -298,7 +298,8 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DCD_STM32_DEVICE_SUSPENDED:
 
       /* USER CODE BEGIN UX_DCD_STM32_DEVICE_SUSPENDED */
-
+      printf("USB Suspended\r\n");
+      // ここで自動的なマウント処理を入れたほうが良さそう
       /* USER CODE END UX_DCD_STM32_DEVICE_SUSPENDED */
 
       break;
@@ -306,7 +307,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
     case UX_DCD_STM32_DEVICE_RESUMED:
 
       /* USER CODE BEGIN UX_DCD_STM32_DEVICE_RESUMED */
-
+      printf("USB Resumed\r\n");
       /* USER CODE END UX_DCD_STM32_DEVICE_RESUMED */
 
       break;
