@@ -17,7 +17,7 @@
 
 #define RAM_DISK_SIZE (128 * 1024)
 
-static uint8_t ram_disk[RAM_DISK_SIZE];
+uint8_t ram_disk[RAM_DISK_SIZE];
 
 /**
  * @brief Initialize the RAM disk.

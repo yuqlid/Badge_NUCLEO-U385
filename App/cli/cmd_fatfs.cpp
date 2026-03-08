@@ -19,6 +19,7 @@
 #include "gc9a01a.h"
 
 static uint8_t buffer[480];
+extern uint8_t ram_disk[];
 extern GC9A01A tft1;
 static unsigned int read;
 
@@ -42,11 +43,13 @@ static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
   }
 
   GC9A01A_set_windows_size(&tft1);
-  for (size_t i = 0; i < 240; i += 1) {  // For each scanline...
-    f_read(&file, buffer, sizeof(buffer), &read);
-    GC9A01A_transmit_data(
-        &tft1, 240, reinterpret_cast<uint16_t *>(buffer));  // Push one row
-  }
+
+  f_read(&file, ram_disk, 240 * 240 * 2, &read); 
+  printf("Read %u bytes from file\r\n", read);
+  GC9A01A_transmit_data(
+      &tft1, 240 * 240 * 2,
+      reinterpret_cast<uint16_t *>(ram_disk));  // Push one row
+
   f_close(&file);
 }
 
