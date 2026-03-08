@@ -69,7 +69,41 @@ CliCommandBinding cmd_readfile = {.name = "readfile",
                                   .context = NULL,
                                   .binding = Cmd_readfile};
 
+static void Cmd_ls(EmbeddedCli *cli, char *args, void *context) {
+  FRESULT res;
+  DIR dir;
+  FILINFO fno;
+
+  res = f_opendir(&dir, path);
+  if (res != FR_OK) {
+    printf("opendir error: %d\n", res);
+    return;
+  }
+
+  while (1) {
+    res = f_readdir(&dir, &fno);
+    if (res != FR_OK || fno.fname[0] == 0) {
+      break;
+    }
+
+    if (fno.fattrib & AM_DIR) {
+      printf("<DIR>  %s\r\n", fno.fname);
+    } else {
+      printf("%8lu %s\r\n", fno.fsize, fno.fname);
+    }
+  }
+
+  f_closedir(&dir);
+}
+
+CliCommandBinding cmd_ls = {.name = "ls",
+                            .help = "List files in directory",
+                            .tokenizeArgs = false,
+                            .context = NULL,
+                            .binding = Cmd_ls};
+
 void bindFatfsCmds(EmbeddedCli *cli) {
   embeddedCliAddBinding(cli, cmd_mount);
   embeddedCliAddBinding(cli, cmd_readfile);
+  embeddedCliAddBinding(cli, cmd_ls);
 }
