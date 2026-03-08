@@ -24,17 +24,17 @@ extern GC9A01A tft1;
 static unsigned int read;
 
 extern uint8_t ram_disk[];
+TCHAR path[] = "1:";  // Path to the drive (flash disk)
 
 static void Cmd_mount(EmbeddedCli *cli, char *args, void *context) {
   FATFS fs;
-  FRESULT res =
-      f_mount(&fs, "1:", 1);  // Mount the filesystem on drive 1 (flash disk)
+  FRESULT res = f_mount(&fs, path, 1);
   if (res != FR_OK) {
     printf("Failed to mount filesystem: %d\r\n", res);
     return;
   }
 
-  f_chdrive("1:");  // Change current drive to 1 (flash disk)
+  f_chdrive(path);  // Change current drive to 1 (flash disk)
                     // 相対パスを指定するために必要
   FIL file;
 
