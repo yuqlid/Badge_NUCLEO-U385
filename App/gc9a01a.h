@@ -224,6 +224,7 @@ void GC9A01A_draw_pixels(GC9A01A *tft, uint16_t x, uint16_t y, uint16_t *color,
 
 void GC9A01A_draw_screen(GC9A01A *tft, uint16_t *img);
 
+void GC9A01A_set_windows_size(GC9A01A *tft);
 #if defined(__cplusplus)
 }
 #endif

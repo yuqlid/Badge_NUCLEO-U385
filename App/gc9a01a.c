@@ -129,3 +129,10 @@ void GC9A01A_draw_pixels2(GC9A01A *tft, uint16_t x, uint16_t y, uint16_t *color,
 void GC9A01A_draw_screen(GC9A01A *tft, uint16_t *img) {
   GC9A01A_draw_pixels(tft, 0, 0, img, tft->width, tft->height);
 }
+
+void GC9A01A_set_windows_size(GC9A01A *tft) {
+  GC9A01A_set_addr_window(tft, 0, 0, tft->width, tft->height);
+  GC9A01A_set_spi_datasize(tft, SPI_DATASIZE_16BIT);
+}
+
+void GC9A01A_draw_line() {}
